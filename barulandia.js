@@ -2,14 +2,15 @@
 //(c) JMGK 2019
 
 //desenho atual
-var current_drawing = 'img/sample01.png';
+var current_drawing = 1;
+const MAX_DRAWS = 5;
 //cor selecionada atual
 var current_color = 'ff00ff';
 
 //inicialização
 window.onload = function() {
     //carrega desenho
-    load_drawing();
+    load_drawing(0);
     //e coloca um evento para preencher com a cor atual os boundaries nos clicks
     document.getElementById('draw').onclick = fill_shape_under;
 
@@ -26,6 +27,15 @@ window.onload = function() {
     imageObj.src = 'img/palette.png';
     //e coloca um evento para mudar a cor atual nos clicks
     canvas.onclick = get_current_color;
+
+    //handler para desenho anterior
+    document.getElementById("prev").onclick = function() { load_drawing(-1); };
+
+    //handler para proximo desenho
+    document.getElementById("next").onclick = function() { load_drawing(1); };
+
+    //handler para limpar desenho
+    document.getElementById("clean").onclick = function() { load_drawing(0); }
 }
 
 //preenche 'tools' com a cor atual
@@ -46,14 +56,16 @@ function get_current_color(e) {
 }
 
 //carrega desenho
-function load_drawing() {
+function load_drawing(i) {
     var canvas = document.getElementById('draw');
     var ctx = canvas.getContext("2d");
     var imageObj = new Image();
     imageObj.onload = function() {
         ctx.drawImage(imageObj, 0, 0);
     };
-    imageObj.src = current_drawing;
+    current_drawing += i;
+    current_drawing = ((current_drawing < 1) ? MAX_DRAWS : ((current_drawing > MAX_DRAWS) ? 1 : current_drawing));
+    imageObj.src = 'img/draw' + current_drawing + '.png';
 }
 
 //preenche a forma clicada
@@ -63,18 +75,24 @@ function fill_shape_under(e) {
 
 //https://ben.akrin.com/?p=7888 (method #4)
 //http://www.williammalone.com/articles/html5-canvas-javascript-paint-bucket-tool/
-function flood_fill(the_canvas, x, y, color) {
-    var the_canvas_context = the_canvas.getContext("2d");
+function flood_fill(canvas, x, y, color) {
+    var ctx = canvas.getContext("2d");
 
     pixel_stack = [{ x: x, y: y }];
-    pixels = the_canvas_context.getImageData(0, 0, the_canvas.width, the_canvas.height);
-    var linear_cords = (y * the_canvas.width + x) * 4;
+    pixels = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    var linear_cords = (y * canvas.width + x) * 4;
     original_color = {
         r: pixels.data[linear_cords],
         g: pixels.data[linear_cords + 1],
         b: pixels.data[linear_cords + 2],
         a: pixels.data[linear_cords + 3]
     };
+
+    //fix para hangs
+    if ((color.r === original_color.r) &&
+        (color.g === original_color.g) &&
+        (color.b === original_color.b)) { return; }
+    //
 
     while (pixel_stack.length > 0) {
         new_pixel = pixel_stack.shift();
@@ -83,20 +101,20 @@ function flood_fill(the_canvas, x, y, color) {
 
         //console.log( x + ", " + y ) ;
 
-        linear_cords = (y * the_canvas.width + x) * 4;
+        linear_cords = (y * canvas.width + x) * 4;
         while (y-- >= 0 &&
             (pixels.data[linear_cords] == original_color.r &&
                 pixels.data[linear_cords + 1] == original_color.g &&
                 pixels.data[linear_cords + 2] == original_color.b &&
                 pixels.data[linear_cords + 3] == original_color.a)) {
-            linear_cords -= the_canvas.width * 4;
+            linear_cords -= canvas.width * 4;
         }
-        linear_cords += the_canvas.width * 4;
+        linear_cords += canvas.width * 4;
         y++;
 
         var reached_left = false;
         var reached_right = false;
-        while (y++ < the_canvas.height &&
+        while (y++ < canvas.height &&
             (pixels.data[linear_cords] == original_color.r &&
                 pixels.data[linear_cords + 1] == original_color.g &&
                 pixels.data[linear_cords + 2] == original_color.b &&
@@ -120,7 +138,7 @@ function flood_fill(the_canvas, x, y, color) {
                 }
             }
 
-            if (x < the_canvas.width - 1) {
+            if (x < canvas.width - 1) {
                 if (pixels.data[linear_cords + 4] == original_color.r &&
                     pixels.data[linear_cords + 4 + 1] == original_color.g &&
                     pixels.data[linear_cords + 4 + 2] == original_color.b &&
@@ -134,10 +152,10 @@ function flood_fill(the_canvas, x, y, color) {
                 }
             }
 
-            linear_cords += the_canvas.width * 4;
+            linear_cords += canvas.width * 4;
         }
     }
-    the_canvas_context.putImageData(pixels, 0, 0);
+    ctx.putImageData(pixels, 0, 0);
 }
 
 function is_in_pixel_stack(x, y, pixel_stack) {
@@ -150,7 +168,6 @@ function is_in_pixel_stack(x, y, pixel_stack) {
 }
 
 function color_to_rgba(color) {
-
     var bigint = parseInt(color, 16);
     var r = (bigint >> 16) & 255;
     var g = (bigint >> 8) & 255;

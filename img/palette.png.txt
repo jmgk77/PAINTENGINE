@@ -1,0 +1,1 @@
+convert palette.png.bak -fill #050505 -opaque #000000 palette.png

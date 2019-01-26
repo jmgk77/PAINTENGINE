@@ -51,7 +51,7 @@ function get_current_color(e) {
     var canvas = document.getElementById('palette');
     var ctx = canvas.getContext("2d");
     var imgData = ctx.getImageData(e.offsetX, e.offsetY, 1, 1);
-    current_color = ((imgData.data[0] << 16) | (imgData.data[1] << 8) | imgData.data[2]).toString(16);
+    current_color = ((((imgData.data[0] << 16) | (imgData.data[1] << 8) | imgData.data[2])).toString(16)).padStart(6, '0');
     set_current_color();
 }
 
@@ -88,11 +88,14 @@ function flood_fill(canvas, x, y, color) {
         a: pixels.data[linear_cords + 3]
     };
 
-    //fix para hangs
+    //sai se tentar pintar o que ja tem essa mesma cor (fix para hangs)
     if ((color.r === original_color.r) &&
         (color.g === original_color.g) &&
         (color.b === original_color.b)) { return; }
-    //
+    //sai se tenta pintar 'preto absoluto'
+    if ((0 === original_color.r) &&
+        (0 === original_color.g) &&
+        (0 === original_color.b)) { return; }
 
     while (pixel_stack.length > 0) {
         new_pixel = pixel_stack.shift();

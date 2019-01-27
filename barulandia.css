@@ -1,5 +1,12 @@
 body {
     background: url(img/fundo.png);
-    background-repeat: no-repeat;
+/*    background-repeat: no-repeat;
+*/    background-repeat: round;
     background-size: cover;
+}
+
+.tool_selected {
+    border-width: 3px;
+    border-style: inset;
+    border-color: green;
 }

@@ -3,14 +3,21 @@
 
 //inicialização
 window.onload = function() {
-    //function PaintEngine(draw_canvas, toolbar_canvas, palette_canvas, palette_name, drawing_names_array, prev_drawing_id, next_drawing_id, clean_drawing_id)
+    /*function PaintEngine(draw_canvas, cur_color_canvas, palette_canvas,
+        palette_file, drawing_files,
+        prev_btn_id, next_btn_id,
+        clear_btn_id, back_btn_id,
+        paint_btn_id, erase_btn_id)*/
     var paint_engine = new PaintEngine('draw',
-        'tools',
+        'color',
         'palette',
         'img/palette.png',
         ['img/draw1.png', 'img/draw2.png', 'img/draw3.png', 'img/draw4.png', 'img/draw5.png'],
         'prev',
         'next',
-        'clean');
+        'clean',
+        'back',
+        'paint',
+        'erase');
     paint_engine.init();
 }

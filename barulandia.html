@@ -3,7 +3,9 @@
 
 <head>
     <meta charset="UTF-8" />
-    <meta name="Barulandia" content="Pinte os desenhos do Livro Infantil Barulandia." />
+    <meta name="Description" content="Pinte os desenhos do Livro Infantil Barulandia." />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#317EFB" />
     <title>BARULANDIA</title>
     <link rel="icon" href="/favicon.ico" type="image/x-icon" />
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
@@ -15,21 +17,24 @@
 <body>
     <div align="center">
         <!-- texteffect -t "Barulandia" -s outline -e wave-bottom -d 0.15 -p 100 -c green  -o black -b none -l 1 -s hardshadow -u darkgreen -f Obelix-Pro-Bold-Italic titulo.png -->
-        <img src="img/titulo.png" />
+        <img alt="" src="img/titulo.png" />
     </div>
         <div align="center">
             <canvas id="draw" width="800" height="600" style="border:1px solid black">Your browser does not support the HTML5 canvas tag.</canvas>
         </div>
         <div align="center">
             <!-- texteffect2 -e normal -s hardshadow -f Brady-Bunch-Remastered -p 200 -c red -hw 5 -bg none -t "<" prev.png -->
-            <img id="prev" width="200" height="50" src="img/prev.png">
-            <canvas id="tools" width="200" height="50" style="border:1px solid black">Your browser does not support the HTML5 canvas tag.</canvas>
-            <img id="clean" width="200" height="50" src="img/clean.png">
-            <img id="next" width="200" height="50" src="img/next.png">
-    </div>
-            <div align="center">
-                <canvas id="palette" width="800" height="150" style="border:1px solid black">Your browser does not support the HTML5 canvas tag.</canvas>
-            </div>
+            <img alt="" id="prev" width="115" height="50" src="img/prev.png">
+            <img alt="" id="next" width="114" height="50" src="img/next.png">
+            <img alt="" id="clean" width="115" height="50" src="img/clean.png">
+            <img alt="" id="back" width="114" height="50" src="img/back.png">
+            <img alt="" id="paint" width="114" height="50" src="img/paint.png">
+            <img alt="" id="erase" width="114" height="50" src="img/erase.png">
+            <canvas id="color" width="114" height="50" style="border:1px solid black">Your browser does not support the HTML5 canvas tag.</canvas>
+        </div>
+        <div align="center">
+            <canvas id="palette" width="800" height="150" style="border:1px solid black">Your browser does not support the HTML5 canvas tag.</canvas>
+        </div>
 </body>
 
 </html>

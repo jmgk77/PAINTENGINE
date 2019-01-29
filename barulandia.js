@@ -19,5 +19,5 @@ window.onload = function() {
         'back',
         'paint',
         'erase');
-    paint_engine.init();
+    paint_engine.run();
 }

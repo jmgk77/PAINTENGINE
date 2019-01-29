@@ -62,24 +62,58 @@ class PaintEngine {
         //carrega desenho
         this.load_sketch(0);
 
-        //handler para escolha de cor na paleta
-        document.getElementById(this.palette_cvs).onclick = function(e) { this.color_picker(e); }.bind(this);
         //handler para usar a ferramenta atual no desenho
-        document.getElementById(this.draw_cvs).onclick = function(e) { this.tool(e); }.bind(this);
+        document.getElementById(this.draw_cvs).onclick = function(e) {
+            this.tool(e);
+        }.bind(this);
+        //handler para escolha de cor na paleta
+        document.getElementById(this.palette_cvs).onclick = function(e) {
+            this.color_picker(e);
+        }.bind(this);
+
         //handler para ir para esenho anterior
-        document.getElementById(this.prev_id).onclick = function() { this.load_sketch(-1); }.bind(this);
+        if (this.prev_id) {
+            document.getElementById(this.prev_id).onclick = function() {
+                this.load_sketch(-1);
+            }.bind(this);
+        }
         //handler para ir para proximo desenho
-        document.getElementById(this.next_id).onclick = function() { this.load_sketch(1); }.bind(this);
+        if (this.next_id) {
+            document.getElementById(this.next_id).onclick = function() {
+                this.load_sketch(1);
+            }.bind(this);
+        }
         //handler para limpar desenho
-        document.getElementById(this.clear_id).onclick = function() { this.load_sketch(0); }.bind(this);
+        if (this.clear_id) {
+            document.getElementById(this.clear_id).onclick = function() {
+                this.load_sketch(0);
+            }.bind(this);
+        }
         //handler para voltar o ultimo comando
-        document.getElementById(this.back_id).onclick = function() { this.back_history(); }.bind(this);
+        if (this.back_id) {
+            document.getElementById(this.back_id).onclick = function() {
+                this.back_history();
+            }.bind(this);
+        }
         //handler para ferramenta 'pintar' (preencher)
-        document.getElementById(this.paint_id).onclick = function() { this.paint(); }.bind(this);
+        if (this.paint_id) {
+            document.getElementById(this.paint_id).onclick = function() {
+                this.paint();
+            }.bind(this);
+        }
         //handler para ferramenta 'apagar' (pintar com branco)
-        document.getElementById(this.erase_id).onclick = function() { this.erase(); }.bind(this);
+        if (this.erase_id) {
+            document.getElementById(this.erase_id).onclick = function() {
+                this.erase();
+            }.bind(this);
+        }
         //handler para ferramenta 'eyedrop' (pegar cor)
-        document.getElementById(this.eyedrop_id).onclick = function() { this.eyedrop(); }.bind(this);
+        if (this.eyedrop_id) {
+
+            document.getElementById(this.eyedrop_id).onclick = function() {
+                this.eyedrop();
+            }.bind(this);
+        }
 
         //simula escolha da ferramenta default
         this.paint();
@@ -98,7 +132,7 @@ class PaintEngine {
 
         //esvazia history quando muda de desenho
         this.history_a.length = 0;
-    };
+    }
 
     //volta um passo na history
     back_history() {
@@ -123,7 +157,7 @@ class PaintEngine {
         var ctx = canvas.getContext("2d");
         ctx.fillStyle = 'rgba(' + this.cur_color.r + ',' + this.cur_color.g + ',' + this.cur_color.b + ',' + this.cur_color.a + ')';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
-    };
+    }
 
     //mostra borda css (escondendo a dos outros)
     _show_border(id) {
@@ -195,7 +229,7 @@ class PaintEngine {
         };
         //se escolheu cor é pq quer pintar (???)
         this.paint();
-    };
+    }
 
     //preenche a forma clicada
     bucket_tool(e) {
@@ -220,11 +254,11 @@ class PaintEngine {
         //sai se tentar pintar o que ja tem essa mesma cor (fix para hangs)
         if ((this.cur_color.r === o_colour.r) &&
             (this.cur_color.g === o_colour.g) &&
-            (this.cur_color.b === o_colour.b)) { return; }
+            (this.cur_color.b === o_colour.b)) return;
         //sai se tenta pintar 'preto absoluto' (cor reservada para as bordas dos desenhos)
         if ((0 === o_colour.r) &&
             (0 === o_colour.g) &&
-            (0 === o_colour.b)) { return; }
+            (0 === o_colour.b)) return;
         //função-ajudante
         var match_colour = function(mod) {
             return (pixels.data[coords + 0 + mod] == o_colour.r &&
@@ -279,7 +313,7 @@ class PaintEngine {
             }
         }
         ctx.putImageData(pixels, 0, 0);
-    };
+    }
 
 
 }

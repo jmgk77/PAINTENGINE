@@ -98,7 +98,7 @@ class PaintEngine {
 
         //esvazia history quando muda de desenho
         this.history_a.length = 0;
-    };
+    }
 
     //volta um passo na history
     back_history() {
@@ -123,7 +123,7 @@ class PaintEngine {
         var ctx = canvas.getContext("2d");
         ctx.fillStyle = 'rgba(' + this.cur_color.r + ',' + this.cur_color.g + ',' + this.cur_color.b + ',' + this.cur_color.a + ')';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
-    };
+    }
 
     //mostra borda css (escondendo a dos outros)
     _show_border(id) {
@@ -195,7 +195,7 @@ class PaintEngine {
         };
         //se escolheu cor é pq quer pintar (???)
         this.paint();
-    };
+    }
 
     //preenche a forma clicada
     bucket_tool(e) {
@@ -279,7 +279,7 @@ class PaintEngine {
             }
         }
         ctx.putImageData(pixels, 0, 0);
-    };
+    }
 
 
 }

@@ -10,7 +10,7 @@ class PaintEngine {
         palette_file, sketch_files,
         prev_btn_id, next_btn_id,
         clear_btn_id, back_btn_id,
-        paint_btn_id, erase_btn_id) {
+        paint_btn_id, erase_btn_id, eyedrop_btn_id) {
 
         //salva canvas
         this.draw_cvs = draw_canvas;
@@ -32,6 +32,7 @@ class PaintEngine {
         this.back_id = back_btn_id;
         this.paint_id = paint_btn_id;
         this.erase_id = erase_btn_id;
+        this.eyedrop_id = eyedrop_btn_id;
 
         //cor selecionada atual
         this.paint_color = this.cur_color = {
@@ -73,14 +74,31 @@ class PaintEngine {
         document.getElementById(this.clear_id).onclick = function() { this.load_sketch(0); }.bind(this);
         //handler para voltar o ultimo comando
         document.getElementById(this.back_id).onclick = function() { this.back_history(); }.bind(this);
-        //handler para ferramenta 'pintar' (unica disponivel)
+        //handler para ferramenta 'pintar' (preencher)
         document.getElementById(this.paint_id).onclick = function() { this.paint(); }.bind(this);
         //handler para ferramenta 'apagar' (pintar com branco)
         document.getElementById(this.erase_id).onclick = function() { this.erase(); }.bind(this);
+        //handler para ferramenta 'eyedrop' (pegar cor)
+        document.getElementById(this.eyedrop_id).onclick = function() { this.eyedrop(); }.bind(this);
 
         //simula escolha da ferramenta default
         this.paint();
     }
+
+    //carrega desenho
+    load_sketch(mod) {
+        var ctx = document.getElementById(this.draw_cvs).getContext("2d");
+        var imageObj = new Image();
+        imageObj.onload = function() {
+            ctx.drawImage(imageObj, 0, 0);
+        };
+        this.cur_sketch += mod;
+        this.cur_sketch = ((this.cur_sketch < 0) ? this.max_sketchs : ((this.cur_sketch > this.max_sketchs) ? 0 : this.cur_sketch));
+        imageObj.src = this.sketch_fnames_a[this.cur_sketch];
+
+        //esvazia history quando muda de desenho
+        this.history_a.length = 0;
+    };
 
     //volta um passo na history
     back_history() {
@@ -99,21 +117,27 @@ class PaintEngine {
         this.history_a.push(document.getElementById(this.draw_cvs).toDataURL("image/png"));
     }
 
+    //preenche mostruario com a cor atual
+    _show_current_color() {
+        var canvas = document.getElementById(this.color_cvs);
+        var ctx = canvas.getContext("2d");
+        ctx.fillStyle = 'rgba(' + this.cur_color.r + ',' + this.cur_color.g + ',' + this.cur_color.b + ',' + this.cur_color.a + ')';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+    };
 
-    //esconde borda css
-    _hide_border(id) {
-        document.getElementById(id).classList.remove("tool_selected");
-    }
-
-    //mostra borda css
+    //mostra borda css (escondendo a dos outros)
     _show_border(id) {
+        //esconde dos outros
+        document.getElementById(this.erase_id).classList.remove("tool_selected");
+        document.getElementById(this.paint_id).classList.remove("tool_selected");
+        document.getElementById(this.eyedrop_id).classList.remove("tool_selected");
+        //mostra nossa
         document.getElementById(id).classList.add("tool_selected");
     }
 
-
     //erase tool (pinta com branco)
     erase() {
-        this._hide_border(this.paint_id);
+        //tira bordinha dos outros e bota na gente
         this._show_border(this.erase_id);
         //apagar é pintar com branco (nao mexe na .paint_color)
         this.cur_color = {
@@ -129,7 +153,7 @@ class PaintEngine {
 
     //paint tool
     paint() {
-        this._hide_border(this.erase_id);
+        //tira bordinha dos outros e bota na gente
         this._show_border(this.paint_id);
         //retorna a cor escolhida por color_picker()
         this.cur_color = this.paint_color;
@@ -138,13 +162,25 @@ class PaintEngine {
         this.tool = this.bucket_tool;
     }
 
-    //preenche mostruario com a cor atual
-    _show_current_color() {
-        var canvas = document.getElementById(this.color_cvs);
-        var ctx = canvas.getContext("2d");
-        ctx.fillStyle = 'rgba(' + this.cur_color.r + ',' + this.cur_color.g + ',' + this.cur_color.b + ',' + this.cur_color.a + ')';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-    };
+    //eyedrop tool
+    eyedrop() {
+        //tira bordinha dos outros e bota na gente
+        this._show_border(this.eyedrop_id);
+        //seta ferramenta atual para bucket_tool
+        this.tool = this.eyedropper_tool;
+    }
+
+    //pega a cor clicada no desenho
+    eyedropper_tool(e) {
+        //hacker! salva canvas da paleta 
+        var tmp = this.palette_cvs;
+        //muda canvas para a canvas de pintar
+        this.palette_cvs = this.draw_cvs;
+        //reutiliza a rotina (!!!)
+        this.color_picker(e);
+        //restaura
+        this.palette_cvs = tmp;
+    }
 
     //pega a cor clicada na paleta
     color_picker(e) {
@@ -159,21 +195,6 @@ class PaintEngine {
         };
         //se escolheu cor é pq quer pintar (???)
         this.paint();
-    };
-
-    //carrega desenho
-    load_sketch(mod) {
-        var ctx = document.getElementById(this.draw_cvs).getContext("2d");
-        var imageObj = new Image();
-        imageObj.onload = function() {
-            ctx.drawImage(imageObj, 0, 0);
-        };
-        this.cur_sketch += mod;
-        this.cur_sketch = ((this.cur_sketch < 0) ? this.max_sketchs : ((this.cur_sketch > this.max_sketchs) ? 0 : this.cur_sketch));
-        imageObj.src = this.sketch_fnames_a[this.cur_sketch];
-
-        //esvazia history quando muda de desenho
-        this.history_a.length = 0;
     };
 
     //preenche a forma clicada

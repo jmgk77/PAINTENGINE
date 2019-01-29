@@ -7,7 +7,7 @@ window.onload = function() {
         palette_file, drawing_files,
         prev_btn_id, next_btn_id,
         clear_btn_id, back_btn_id,
-        paint_btn_id, erase_btn_id)*/
+        paint_btn_id, erase_btn_id, eyedrop_btn_id)*/
     var paint_engine = new PaintEngine('draw',
         'color',
         'palette',
@@ -18,6 +18,7 @@ window.onload = function() {
         'clean',
         'back',
         'paint',
-        'erase');
+        'erase',
+        'eyedrop');
     paint_engine.run();
 }

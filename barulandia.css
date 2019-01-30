@@ -10,3 +10,8 @@ body {
     border-style: inset;
     border-color: green;
 }
+
+.tool_button {
+	width: 96px;
+	height: 50px;
+}

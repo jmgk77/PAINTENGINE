@@ -3,21 +3,18 @@
 
 //inicialização
 window.onload = function() {
-    /*function PaintEngine(draw_canvas, cur_color_canvas, palette_canvas,
-        palette_file, drawing_files,
-        prev_btn_id, next_btn_id,
-        clear_btn_id, back_btn_id,
-        paint_btn_id, erase_btn_id, eyedrop_btn_id)*/
-    var paint_engine = new PaintEngine('draw',
-        'color',
-        'palette',
-        'img/palette.png',
+    /*    constructor(draw_canvas, aux_canvas,
+            sketch_files,
+            prev_btn_id, reload_btn_id, next_btn_id,
+            back_btn_id,
+            paint_btn_id, cur_color_canvas, palette_file,
+            erase_btn_id,
+            eyedrop_btn_id) */
+    var paint_engine = new PaintEngine('draw', 'palette',
         ['img/draw1.png', 'img/draw2.png', 'img/draw3.png', 'img/draw4.png', 'img/draw5.png'],
-        'prev',
-        'next',
-        'clean',
+        'prev', 'clean', 'next',
         'back',
-        'paint',
+        'paint', 'color', 'img/palette.png',
         'erase',
         'eyedrop');
     paint_engine.run();

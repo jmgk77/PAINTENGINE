@@ -9,5 +9,4 @@ texteffect -e arc-top -s outline -a 180 -f Brady-Bunch-Remastered -p 48 -c red -
 texteffect -e arc-top -s outline -a 180 -f Brady-Bunch-Remastered -p 48 -c red -b none -o black -l 1 -t "PINTAR" paint.png
 texteffect -e arc-top -s outline -a 180 -f Brady-Bunch-Remastered -p 48 -c red -b none -o black -l 1 -t "APAGAR" erase.png
 texteffect -e arc-top -s outline -a 180 -f Brady-Bunch-Remastered -p 48 -c red -b none -o black -l 1 -t "CONTA-GOTAS" eyedrop.png
-
-
+texteffect -e arc-top -s outline -a 180 -f Brady-Bunch-Remastered -p 48 -c red -b none -o black -l 1 -t "STICKERS" sticker.png

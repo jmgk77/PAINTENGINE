@@ -9,13 +9,16 @@ window.onload = function() {
             back_btn_id,
             paint_btn_id, cur_color_canvas, palette_file,
             erase_btn_id,
-            eyedrop_btn_id) */
+            eyedrop_btn_id)
+            sticker_btn_id, cur_sticker_canvas, sticker_file, sticker_x, sticker_y) */
+
     var paint_engine = new PaintEngine('draw', 'palette',
         ['img/draw1.png', 'img/draw2.png', 'img/draw3.png', 'img/draw4.png', 'img/draw5.png'],
         'prev', 'clean', 'next',
         'back',
         'paint', 'color', 'img/palette.png',
         'erase',
-        'eyedrop');
+        'eyedrop',
+        'sticker', 'color', 'img/stickers.png', 10, 3);
     paint_engine.run();
 }

@@ -12,7 +12,8 @@ class PaintEngine {
         back_btn_id,
         paint_btn_id, cur_color_canvas, palette_file,
         erase_btn_id,
-        eyedrop_btn_id) {
+        eyedrop_btn_id,
+        sticker_btn_id, cur_sticker_canvas, sticker_file, sticker_x, sticker_y) {
 
         //salva canvas
         this.draw_cvs = draw_canvas;
@@ -41,6 +42,13 @@ class PaintEngine {
 
         //salva id do botão da ferramenta conta-gotas
         this.eyedrop_id = eyedrop_btn_id;
+
+        //salva id fo botão da ferramenta stickers
+        this.sticker_id = sticker_btn_id;
+        this.sticker_cvs = cur_sticker_canvas;
+        this.sticker_fname = sticker_file;
+        this.sticker_grid_x = sticker_x;
+        this.sticker_grid_y = sticker_y;
 
         //cor default
         this.paint_color = this.cur_color = {
@@ -106,6 +114,12 @@ class PaintEngine {
                 this.eyedrop();
             }.bind(this);
         }
+        //handler para ferramenta 'sticker' (adiciona figurinhas duma spritesheet)
+        if (this.sticker_id) {
+            document.getElementById(this.sticker_id).onclick = function() {
+                this.sticker();
+            }.bind(this);
+        }
 
         //carrega desenho
         this.load_sketch(0);
@@ -162,6 +176,7 @@ class PaintEngine {
         document.getElementById(this.erase_id).classList.remove("tool_selected");
         document.getElementById(this.paint_id).classList.remove("tool_selected");
         document.getElementById(this.eyedrop_id).classList.remove("tool_selected");
+        document.getElementById(this.sticker_id).classList.remove("tool_selected");
         //mostra nossa
         document.getElementById(id).classList.add("tool_selected");
     }
@@ -330,5 +345,89 @@ class PaintEngine {
         ctx.putImageData(pixels, 0, 0);
     }
 
+    //sticker tool
+    sticker() {
+        //tira bordinha dos outros e bota na gente
+        this._show_border(this.sticker_id);
+        //seta ferramenta atual para bucket_tool
+        this.tool = this.sticker_tool;
+
+        //se ja temos um sticker escolhido, mostra
+        this._show_sticker();
+
+        //carrega spritesheet na canvas auxiliar
+        var canvas = document.getElementById(this.aux_cvs);
+        var ctx = canvas.getContext("2d");
+        ctx.fillStyle = 'white';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        var img = new Image();
+        img.onload = function() {
+            ctx.drawImage(img, 0, 0);
+        };
+        img.src = this.sticker_fname;
+
+        //calcula tamanho X e Y de cada sticker
+        this.sticker_size_x = canvas.width / this.sticker_grid_x;
+        this.sticker_size_y = canvas.height / this.sticker_grid_y;
+
+        //handler para escolha de sprite na spritesheet ao clicar na canvas auxiliar
+        document.getElementById(this.aux_cvs).onclick = function(e) {
+            this.sticker_picker(e);
+        }.bind(this);
+    }
+
+    //larga current sticker em x,y
+    sticker_tool(e) {
+        //salva desenho atual no history
+        this._save_history();
+
+        //printa sticker 
+        var ctx = document.getElementById(this.draw_cvs).getContext("2d");
+        ctx.drawImage(this.cur_sticker_cvs, e.offsetX - (this.sticker_size_x / 2), e.offsetY - (this.sticker_size_y / 2));
+    }
+
+    _show_sticker() {
+        //mostra current icon no sticker_cvs
+        var canvas = document.getElementById(this.sticker_cvs);
+        var ctx = canvas.getContext("2d");
+        ctx.fillStyle = 'white';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        if (this.cur_sticker_cvs) {
+            //desenha ampliado
+            ctx.save();
+            ctx.scale(3.5, 3.5);
+            ctx.drawImage(this.cur_sticker_cvs, 0, 0);
+            ctx.restore();
+        }
+    }
+
+    //pega sprite clicado na canvas auxiliar
+    sticker_picker(e) {
+        //calcula inicio x y do sticker clicado 
+        var sticker_x = Math.floor(e.offsetX / this.sticker_size_x) * this.sticker_size_x;
+        var sticker_y = Math.floor(e.offsetY / this.sticker_size_y) * this.sticker_size_y;
+
+        //pega sticker da canvas auxiliar
+        var ctx = document.getElementById(this.aux_cvs).getContext("2d");
+        var cur_sticker = ctx.getImageData(sticker_x, sticker_y, this.sticker_size_x, this.sticker_size_y);
+
+        //cria canvas para apenas esse sticker
+        this.cur_sticker_cvs = document.createElement('canvas');
+        this.cur_sticker_cvs.width = cur_sticker.width;
+        this.cur_sticker_cvs.height = cur_sticker.height;
+
+        //deixa transparente
+        var imageData = cur_sticker.data;
+        for (var i = 0; i < imageData.length; i += 4) {
+            if (imageData[i]) {
+                imageData[i + 3] = 0;
+            }
+        }
+        //e coloca o sticker na canvas
+        this.cur_sticker_cvs.getContext("2d").putImageData(cur_sticker, 0, 0);
+
+        //se escolheu cor é pq quer pintar (???)
+        this.sticker();
+    }
 
 }

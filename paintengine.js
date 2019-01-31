@@ -9,7 +9,7 @@ class PaintEngine {
     constructor(draw_canvas, aux_canvas,
         sketch_files,
         prev_btn_id, reload_btn_id, next_btn_id,
-        back_btn_id,
+        back_btn_id, redo_btn_id,
         paint_btn_id, cur_color_canvas, palette_file,
         erase_btn_id,
         eyedrop_btn_id,
@@ -29,8 +29,9 @@ class PaintEngine {
         this.reload_id = reload_btn_id;
         this.next_id = next_btn_id;
 
-        //salva id do botão ctrl+z
+        //salva ids dos botões ctrl+z y ctrl+y
         this.back_id = back_btn_id;
+        this.redo_id = redo_btn_id;
 
         //salva id do botão pintar, canvas para mostrar a cor atual e nome do imagem de paleta
         this.paint_id = paint_btn_id;
@@ -60,6 +61,7 @@ class PaintEngine {
 
         //array do history dos desenhos
         this.history_a = [];
+        this.history_ptr = 0;
 
         //ptr para ferramenta selecionada atualmente
         this.tool = null;
@@ -94,6 +96,12 @@ class PaintEngine {
         if (this.back_id) {
             document.getElementById(this.back_id).onclick = function() {
                 this.back_history();
+            }.bind(this);
+        }
+        //handler para refazer o ultimo comando
+        if (this.redo_id) {
+            document.getElementById(this.redo_id).onclick = function() {
+                this.redo_history();
             }.bind(this);
         }
         //handler para ferramenta 'pintar' (preencher)
@@ -145,19 +153,48 @@ class PaintEngine {
 
     //volta um passo na history
     back_history() {
-        if (this.history_a.length) {
+        //temos uma history e não estamos no começo dela
+        if ((this.history_a.length) && (this.history_ptr > 0)) {
+            //salva tela atual no history, para poder voltar pra ela, se estivermos nos final da lista
+            if (this.history_a.length == this.history_ptr) {
+                this.history_a[this.history_ptr] = (document.getElementById(this.draw_cvs).toDataURL("image/png"));
+            }
+            //copia history na canvas
             var ctx = document.getElementById(this.draw_cvs).getContext("2d");
             var img = new Image();
             img.onload = function() {
                 ctx.drawImage(img, 0, 0);
             };
-            img.src = this.history_a.pop();
+            img.src = this.history_a[this.history_ptr - 1];
+            //ajusta ponteiro para entrada anterior do history
+            this.history_ptr--;
+        }
+    }
+
+    //refazer um passo na history (###não ta refazendo ultimo passo)
+    redo_history() {
+        //temos uma history e não estamos no começo dela
+        if ((this.history_a.length) && (this.history_ptr < this.history_a.length)) {
+            //copia history na canvas
+            var ctx = document.getElementById(this.draw_cvs).getContext("2d");
+            var img = new Image();
+            img.onload = function() {
+                ctx.drawImage(img, 0, 0);
+            };
+            img.src = this.history_a[this.history_ptr + 1];
+            //ajusta ponteiro para proxima entrada do history
+            this.history_ptr++;
         }
     }
 
     //salva desenho atual no history
     _save_history() {
-        this.history_a.push(document.getElementById(this.draw_cvs).toDataURL("image/png"));
+        //adiciona modificações 
+        this.history_a[this.history_ptr] = (document.getElementById(this.draw_cvs).toDataURL("image/png"));
+        //passo atual vira o ultimo
+        this.history_a.length = this.history_ptr + 1;
+        //ajusta ponteiro para proxima entrada do history
+        this.history_ptr++;
     }
 
     //preenche mostruario com a cor atual
@@ -263,9 +300,6 @@ class PaintEngine {
 
     //preenche a forma clicada
     bucket_tool(e) {
-        //salva desenho atual no history
-        this._save_history();
-
         //pinta
         var canvas = document.getElementById(this.draw_cvs);
         var ctx = canvas.getContext("2d");
@@ -296,6 +330,9 @@ class PaintEngine {
                 pixels.data[coords + 2 + mod] == o_colour.b &&
                 pixels.data[coords + 3 + mod] == o_colour.a);
         }
+
+        //salva desenho atual no history
+        this._save_history();
 
         while (pixel_stack.length > 0) {
             var new_pixel = pixel_stack.pop();

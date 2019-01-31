@@ -141,49 +141,44 @@ class PaintEngine {
     back_history() {
         //temos uma history e não estamos no começo dela
         if ((this.history_a.length) && (this.history_ptr > 0)) {
-            //ajusta ponteiro para entrada anterior do history
-            this.history_ptr--;
-
-            console.log('BACK FROM POS ' + this.history_ptr + '(' + this.history_a.length + ')');
-
+            //salva tela atual no history, para poder voltar pra ela, se estivermos nos final da lista
+            if (this.history_a.length == this.history_ptr) {
+                this.history_a[this.history_ptr] = (document.getElementById(this.draw_cvs).toDataURL("image/png"));
+            }
             //copia history na canvas
             var ctx = document.getElementById(this.draw_cvs).getContext("2d");
             var img = new Image();
             img.onload = function() {
                 ctx.drawImage(img, 0, 0);
             };
-            img.src = this.history_a[this.history_ptr];
-            console.log('*' + this.history_a[this.history_ptr]);
-        } else { console.log('BOUNDARY!'); }
+            img.src = this.history_a[this.history_ptr - 1];
+            //ajusta ponteiro para entrada anterior do history
+            this.history_ptr--;
+        }
     }
 
     //refazer um passo na history (###não ta refazendo ultimo passo)
     redo_history() {
         //temos uma history e não estamos no começo dela
         if ((this.history_a.length) && (this.history_ptr < this.history_a.length)) {
-            console.log('REDO POS ' + this.history_ptr + '(' + this.history_a.length + ')');
-
             //copia history na canvas
             var ctx = document.getElementById(this.draw_cvs).getContext("2d");
             var img = new Image();
             img.onload = function() {
                 ctx.drawImage(img, 0, 0);
             };
-            img.src = this.history_a[this.history_ptr];
-            console.log('*' + this.history_a[this.history_ptr]);
+            img.src = this.history_a[this.history_ptr + 1];
             //ajusta ponteiro para proxima entrada do history
             this.history_ptr++;
-
-        } else { console.log('BOUNDARY!'); }
+        }
     }
 
     //salva desenho atual no history
     _save_history() {
-        console.log('SAVE AT POS ' + this.history_ptr + '(' + this.history_a.length + ')');
-        //passo atual vira o ultimo
-        this.history_a.length = this.history_ptr;
         //adiciona modificações 
         this.history_a[this.history_ptr] = (document.getElementById(this.draw_cvs).toDataURL("image/png"));
+        //passo atual vira o ultimo
+        this.history_a.length = this.history_ptr + 1;
         //ajusta ponteiro para proxima entrada do history
         this.history_ptr++;
     }
@@ -290,9 +285,6 @@ class PaintEngine {
 
     //preenche a forma clicada
     bucket_tool(e) {
-        //salva desenho atual no history
-        this._save_history();
-
         //pinta
         var canvas = document.getElementById(this.draw_cvs);
         var ctx = canvas.getContext("2d");
@@ -323,6 +315,9 @@ class PaintEngine {
                 pixels.data[coords + 2 + mod] == o_colour.b &&
                 pixels.data[coords + 3 + mod] == o_colour.a);
         }
+
+        //salva desenho atual no history
+        this._save_history();
 
         while (pixel_stack.length > 0) {
             var new_pixel = pixel_stack.pop();

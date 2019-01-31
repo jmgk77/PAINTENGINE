@@ -9,7 +9,7 @@ class PaintEngine {
     constructor(draw_canvas, aux_canvas,
         sketch_files,
         prev_btn_id, reload_btn_id, next_btn_id,
-        back_btn_id,
+        back_btn_id, redo_btn_id,
         paint_btn_id, cur_color_canvas, palette_file,
         erase_btn_id,
         eyedrop_btn_id) {
@@ -28,8 +28,9 @@ class PaintEngine {
         this.reload_id = reload_btn_id;
         this.next_id = next_btn_id;
 
-        //salva id do botão ctrl+z
+        //salva ids dos botões ctrl+z y ctrl+y
         this.back_id = back_btn_id;
+        this.redo_id = redo_btn_id;
 
         //salva id do botão pintar, canvas para mostrar a cor atual e nome do imagem de paleta
         this.paint_id = paint_btn_id;
@@ -52,6 +53,7 @@ class PaintEngine {
 
         //array do history dos desenhos
         this.history_a = [];
+        this.history_ptr = 0;
 
         //ptr para ferramenta selecionada atualmente
         this.tool = null;
@@ -86,6 +88,12 @@ class PaintEngine {
         if (this.back_id) {
             document.getElementById(this.back_id).onclick = function() {
                 this.back_history();
+            }.bind(this);
+        }
+        //handler para refazer o ultimo comando
+        if (this.redo_id) {
+            document.getElementById(this.redo_id).onclick = function() {
+                this.redo_history();
             }.bind(this);
         }
         //handler para ferramenta 'pintar' (preencher)
@@ -131,19 +139,53 @@ class PaintEngine {
 
     //volta um passo na history
     back_history() {
-        if (this.history_a.length) {
+        //temos uma history e não estamos no começo dela
+        if ((this.history_a.length) && (this.history_ptr > 0)) {
+            //ajusta ponteiro para entrada anterior do history
+            this.history_ptr--;
+
+            console.log('BACK FROM POS ' + this.history_ptr + '(' + this.history_a.length + ')');
+
+            //copia history na canvas
             var ctx = document.getElementById(this.draw_cvs).getContext("2d");
             var img = new Image();
             img.onload = function() {
                 ctx.drawImage(img, 0, 0);
             };
-            img.src = this.history_a.pop();
-        }
+            img.src = this.history_a[this.history_ptr];
+            console.log('*' + this.history_a[this.history_ptr]);
+        } else { console.log('BOUNDARY!'); }
+    }
+
+    //refazer um passo na history (###não ta refazendo ultimo passo)
+    redo_history() {
+        //temos uma history e não estamos no começo dela
+        if ((this.history_a.length) && (this.history_ptr < this.history_a.length)) {
+            console.log('REDO POS ' + this.history_ptr + '(' + this.history_a.length + ')');
+
+            //copia history na canvas
+            var ctx = document.getElementById(this.draw_cvs).getContext("2d");
+            var img = new Image();
+            img.onload = function() {
+                ctx.drawImage(img, 0, 0);
+            };
+            img.src = this.history_a[this.history_ptr];
+            console.log('*' + this.history_a[this.history_ptr]);
+            //ajusta ponteiro para proxima entrada do history
+            this.history_ptr++;
+
+        } else { console.log('BOUNDARY!'); }
     }
 
     //salva desenho atual no history
     _save_history() {
-        this.history_a.push(document.getElementById(this.draw_cvs).toDataURL("image/png"));
+        console.log('SAVE AT POS ' + this.history_ptr + '(' + this.history_a.length + ')');
+        //passo atual vira o ultimo
+        this.history_a.length = this.history_ptr;
+        //adiciona modificações 
+        this.history_a[this.history_ptr] = (document.getElementById(this.draw_cvs).toDataURL("image/png"));
+        //ajusta ponteiro para proxima entrada do history
+        this.history_ptr++;
     }
 
     //preenche mostruario com a cor atual

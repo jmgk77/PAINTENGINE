@@ -159,15 +159,10 @@ class PaintEngine {
             if (this.history_a.length == this.history_ptr) {
                 this.history_a[this.history_ptr] = (document.getElementById(this.draw_cvs).toDataURL("image/png"));
             }
-            //copia history na canvas
-            var ctx = document.getElementById(this.draw_cvs).getContext("2d");
-            var img = new Image();
-            img.onload = function() {
-                ctx.drawImage(img, 0, 0);
-            };
-            img.src = this.history_a[this.history_ptr - 1];
             //ajusta ponteiro para entrada anterior do history
             this.history_ptr--;
+            //copia history na canvas
+            this._canvas_history_update();
         }
     }
 
@@ -175,26 +170,29 @@ class PaintEngine {
     redo_history() {
         //temos uma history e não estamos no começo dela
         if ((this.history_a.length) && (this.history_ptr < this.history_a.length)) {
-            //copia history na canvas
-            var ctx = document.getElementById(this.draw_cvs).getContext("2d");
-            var img = new Image();
-            img.onload = function() {
-                ctx.drawImage(img, 0, 0);
-            };
-            img.src = this.history_a[this.history_ptr + 1];
             //ajusta ponteiro para proxima entrada do history
             this.history_ptr++;
+            //copia history na canvas
+            this._canvas_history_update();
         }
+    }
+
+    //copia history na canvas
+    _canvas_history_update() {
+        var ctx = document.getElementById(this.draw_cvs).getContext("2d");
+        var img = new Image();
+        img.onload = function() {
+            ctx.drawImage(img, 0, 0);
+        };
+        img.src = this.history_a[this.history_ptr];
     }
 
     //salva desenho atual no history
     _save_history() {
         //adiciona modificações 
         this.history_a[this.history_ptr] = (document.getElementById(this.draw_cvs).toDataURL("image/png"));
-        //passo atual vira o ultimo
-        this.history_a.length = this.history_ptr + 1;
-        //ajusta ponteiro para proxima entrada do history
-        this.history_ptr++;
+        //ajusta ponteiro para proxima entrada do history e passo atual vira o ultimo
+        this.history_a.length = ++this.history_ptr;
     }
 
     //preenche mostruario com a cor atual
@@ -463,7 +461,7 @@ class PaintEngine {
         //e coloca o sticker na canvas
         this.cur_sticker_cvs.getContext("2d").putImageData(cur_sticker, 0, 0);
 
-        //se escolheu cor é pq quer pintar (???)
+        //se escolheu sticker é pq quer stickar? (???)
         this.sticker();
     }
 

@@ -6,17 +6,22 @@
 class PaintEngine {
 
     //init
-    constructor(draw_canvas, aux_canvas,
+    constructor(sketch_canvas, aux_canvas,
         sketch_files,
         prev_btn_id, reload_btn_id, next_btn_id,
-        back_btn_id, redo_btn_id,
+        undo_btn_id, redo_btn_id,
         paint_btn_id, cur_color_canvas, palette_file,
         erase_btn_id,
         eyedrop_btn_id,
         sticker_btn_id, cur_sticker_canvas, sticker_file, sticker_x, sticker_y) {
 
+        //checa parametros essenciais
+        if (!sketch_canvas) throw "PaintEngine: constructor: <sketch_canvas> must be defined";
+        if (!sketch_files) throw "PaintEngine: constructor: <sketch_files> must be defined";
+        if (!sketch_files.length) throw "PaintEngine: constructor: <sketch_files> must be have at least 1 element";
+
         //salva canvas
-        this.draw_cvs = draw_canvas;
+        this.draw_cvs = sketch_canvas;
         this.aux_cvs = aux_canvas;
 
         //salva array de desenhos
@@ -30,7 +35,7 @@ class PaintEngine {
         this.next_id = next_btn_id;
 
         //salva ids dos botões ctrl+z y ctrl+y
-        this.back_id = back_btn_id;
+        this.undo_id = undo_btn_id;
         this.redo_id = redo_btn_id;
 
         //salva id do botão pintar, canvas para mostrar a cor atual e nome do imagem de paleta
@@ -93,8 +98,8 @@ class PaintEngine {
             }.bind(this);
         }
         //handler para voltar o ultimo comando
-        if (this.back_id) {
-            document.getElementById(this.back_id).onclick = function() {
+        if (this.undo_id) {
+            document.getElementById(this.undo_id).onclick = function() {
                 this.back_history();
             }.bind(this);
         }
@@ -208,12 +213,12 @@ class PaintEngine {
     //mostra borda css (escondendo a dos outros)
     _show_border(id) {
         //esconde dos outros
-        document.getElementById(this.erase_id).classList.remove("tool_selected");
-        document.getElementById(this.paint_id).classList.remove("tool_selected");
-        document.getElementById(this.eyedrop_id).classList.remove("tool_selected");
-        document.getElementById(this.sticker_id).classList.remove("tool_selected");
+        if (this.erase_id) document.getElementById(this.erase_id).classList.remove("tool_selected");
+        if (this.paint_id) document.getElementById(this.paint_id).classList.remove("tool_selected");
+        if (this.eyedrop_id) document.getElementById(this.eyedrop_id).classList.remove("tool_selected");
+        if (this.sticker_id) document.getElementById(this.sticker_id).classList.remove("tool_selected");
         //mostra nossa
-        document.getElementById(id).classList.add("tool_selected");
+        if (id) document.getElementById(id).classList.add("tool_selected");
     }
 
     //erase tool (pinta com branco)
@@ -268,17 +273,19 @@ class PaintEngine {
         this._show_current_color();
 
         //carrega paleta na canvas auxiliar
-        var ctx = document.getElementById(this.aux_cvs).getContext("2d");
-        var img = new Image();
-        img.onload = function() {
-            ctx.drawImage(img, 0, 0);
-        };
-        img.src = this.palette_fname;
+        if (this.aux_cvs) {
+            var ctx = document.getElementById(this.aux_cvs).getContext("2d");
+            var img = new Image();
+            img.onload = function() {
+                ctx.drawImage(img, 0, 0);
+            };
+            img.src = this.palette_fname;
 
-        //handler para escolha de cor na paleta ao clicar na paleta auxiliar
-        document.getElementById(this.aux_cvs).onclick = function(e) {
-            this.color_picker(e);
-        }.bind(this);
+            //handler para escolha de cor na paleta ao clicar na paleta auxiliar
+            document.getElementById(this.aux_cvs).onclick = function(e) {
+                this.color_picker(e);
+            }.bind(this);
+        }
     }
 
     //pega a cor clicada na paleta

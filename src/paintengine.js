@@ -3,15 +3,18 @@
 
 'use strict';
 
-/*sketch_canvas, sketch_files, color, aux_canvas, palette_file, current_color_canvas*/
+/*
+sketch_canvas, sketch_files, color, aux_canvas, palette_file, current_color_canvas,
+prev_btn_id, reload_btn_id, next_btn_id,
+*/
 
-/*        prev_btn_id, reload_btn_id, next_btn_id,
+/*
         undo_btn_id, redo_btn_id,
         paint_btn_id, 
         erase_btn_id,
         eyedrop_btn_id,
         sticker_btn_id, cur_sticker_canvas, sticker_file, sticker_x, sticker_y
-        */
+*/
 
 class PaintEngine {
 
@@ -252,7 +255,7 @@ class PaintEngine {
         this._show_current_color();
 
         //carrega paleta na canvas auxiliar
-        if ((this.conf.aux_canvas)&&(this.conf.palette_file)) {
+        if ((this.conf.aux_canvas) && (this.conf.palette_file)) {
             var ctx = document.getElementById(this.conf.aux_canvas).getContext("2d");
             var img = new Image();
             img.onload = function() {

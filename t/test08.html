@@ -1,0 +1,35 @@
+<!DOCTYPE HTML>
+
+<head>
+    <script type="text/javascript" src="../src/paintengine.js"> </script>
+    <script>
+    window.onload = function() {
+        var paint_engine = new PaintEngine({
+            sketch_canvas: 'canvas1',
+            sketch_files: ['draw01.png', 'draw02.png'],
+            aux_canvas: 'canvas2',
+            palette_file: 'palette.png',
+            current_color_canvas: 'canvas3',
+            prev_btn_id: 'btn_prev',
+            reload_btn_id: 'btn_reload',
+            next_btn_id: 'btn_next',
+        });
+        paint_engine.run();
+    }
+    </script>
+</head>
+
+<body>
+    <div style="border:1px solid black;">
+        new PaintEngine( { sketch_canvas: , sketch_files: [ ] , aux_canvas: , palette_file: , current_color_canvas: , prev_btn_id: , reload_btn_id: , next_btn_id: } )
+    </div>
+    <br><canvas id="canvas1" width="800" height="600"></canvas>
+    <br>
+    <canvas id="canvas3" width="50" height="50"></canvas>
+    <img id='btn_prev' src='btn_prev.png'>
+    <img id='btn_reload' src='btn_reload.png'>
+    <img id='btn_next' src='btn_next.png'>
+    <br><canvas id="canvas2" width="800" height="200"></canvas>
+</body>
+
+</html>

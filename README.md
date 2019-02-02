@@ -25,6 +25,9 @@ Opcionais:
 - aux_canvas: canvas auxiliar para mostrar certas ferramentas
 - palette_file: arquivo com a paleta a ser utilizada
 - current_color_canvas: mini-canvas para mostrar a cor selecionada
+- prev_btn_id: id do botão para navegar ao desenho anterior de sketch_files[]
+- reload_btn_id: id do botão para recarregar o desenho atual de sketch_files[]
+- next_btn_id: id do botão para navegar ao proximo desenho de sketch_files[]
 
 *** Tests
 
@@ -34,6 +37,8 @@ test03.html - testa canvas sozinha, definindo a cor no setter
 test04.html - testa canvas e palete
 test05.html - testa canvas e 'cor atual'
 test06.html - testa canvas, palete e 'cor atual'
+test07.html - testa canvas e navegação
+test08.html - testa canvas, palete, 'cor atual' e navegação
 
 
 **Unauthorized copying of any files in this project, via any medium is strictly prohibited.**

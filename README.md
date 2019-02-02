@@ -8,7 +8,11 @@ PAINT ENGINE - Engine para jogos de pintar
 
 *** CONSTRUCTOR
 
-    constructor( { arg_obj } ) 
+    new PaintEngine( { arg_obj } ) 
+
+*** COLOR (SETTER)
+
+    PaintEngine.color = {r:,g:,b:a:}
 
 *** { arg_obj }
 
@@ -22,6 +26,7 @@ Opcionais:
 *** Tests
 
 test01.html - testa canvas sozinha
-test02.html - testa canvas sozinha, definindo a cor
+test02.html - testa canvas sozinha, definindo a cor no construtor
+test02.html - testa canvas sozinha, definindo a cor no setter
 
 **Unauthorized copying of any files in this project, via any medium is strictly prohibited.**

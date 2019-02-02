@@ -6,8 +6,9 @@
     window.onload = function() {
         var paint_engine = new PaintEngine({
             sketch_canvas: 'canvas1',
-            sketch_files: ['draw01.png']
+            sketch_files: ['draw01.png'],
         });
+        paint_engine.color = { r: 0xff, g: 0x00, b: 0x00, a: 0xff };
         paint_engine.run();
     }
     </script>
@@ -16,6 +17,8 @@
 <body>
     <div style="border:1px solid black;">
         new PaintEngine( { sketch_canvas: 'canvas1', sketch_files: [ 'draw01.png' ] } )
+        <br>
+        PaintEngine.color = {};
     </div>
     <br><canvas id="canvas1" width="800" height="600" />
 </body>

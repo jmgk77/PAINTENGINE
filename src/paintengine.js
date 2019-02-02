@@ -3,11 +3,12 @@
 
 'use strict';
 
-/*sketch_canvas, aux_canvas,
-        sketch_files,
+/*sketch_canvas, sketch_files, color*/
+
+	  /*aux_canvas, cur_color_canvas, palette_file,
         prev_btn_id, reload_btn_id, next_btn_id,
         undo_btn_id, redo_btn_id,
-        paint_btn_id, cur_color_canvas, palette_file,
+        paint_btn_id, 
         erase_btn_id,
         eyedrop_btn_id,
         sticker_btn_id, cur_sticker_canvas, sticker_file, sticker_x, sticker_y
@@ -34,12 +35,7 @@ class PaintEngine {
 
         //se user não definiu uma cor, usa cor default
         if (!this.conf.color) {
-            this.conf.color = {
-                r: 0x80,
-                g: 0x00,
-                b: 0x80,
-                a: 0xff
-            };
+            this.color = { r: 0x80, g: 0x00, b: 0x80, a: 0xff };
         }
 
         //array do history dos desenhos
@@ -48,6 +44,11 @@ class PaintEngine {
 
         //ptr para ferramenta selecionada atualmente
         this.tool = null;
+    }
+
+    //setter para cor atual
+    set color (c) {
+    	this.conf.color = c;
     }
 
     //roda a bagaça

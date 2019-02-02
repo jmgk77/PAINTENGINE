@@ -2,23 +2,29 @@
 
 **Copyright (c) JMGK All Rights reserved**
 
-_Proprietary and confidential._
-
 PAINT ENGINE - Engine para jogos de pintar
 
-*** CONSTRUCTOR
+
+
+***CONSTRUCTOR***
 
     new PaintEngine( { arg_obj } ) 
 
-*** COLOR (SETTER)
+
+
+***COLOR (SETTER)***
 
     PaintEngine.color = {r:,g:,b:a:}
 
-*** RUN
+
+
+***RUN***
 
     PaintEngine.run()
 
-*** { arg_obj }
+
+
+***{ arg_obj }***
 
 Requeridos:
 - sketch_canvas: main canvas id
@@ -29,16 +35,23 @@ Opcionais:
 - aux_canvas: canvas auxiliar para mostrar certas ferramentas
 - palette_file: arquivo com a paleta a ser utilizada
 - current_color_canvas: mini-canvas para mostrar a cor selecionada
+
+- css_class_border: nome da classe css para bordas de botões
+
 - prev_btn_id: id do botão para navegar ao desenho anterior de sketch_files[]
 - reload_btn_id: id do botão para recarregar o desenho atual de sketch_files[]
 - next_btn_id: id do botão para navegar ao proximo desenho de sketch_files[]
+
 - undo_btn_id: id of botão undo
 - redo_btn_id: id of botão redo
+
 - paint_btn_id: id of botão pintar
 - erase_btn_id: id of botão apagar
-- css_class_border: nome da classe css para bordas de botões
+- eyedrop_btn_id: id do botão eyedrop
 
-*** Tests
+
+
+***TESTES***
 
 test01.html - testa canvas sozinha
 test02.html - testa canvas, definindo a cor no construtor
@@ -52,6 +65,10 @@ test09.html - testa undo e redo
 test10.html - testa pintar e apagar
 test11.html - testa pintar, apagar e canvas 'cor atual'
 test12.html - testa pintar, apagar e 'css border'
+test13.html - testa pintar, eyedrop, palete, canvas 'cor atual' e 'css border'
 
+
+
+_Proprietary and confidential._
 
 **Unauthorized copying of any files in this project, via any medium is strictly prohibited.**

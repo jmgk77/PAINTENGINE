@@ -6,11 +6,10 @@
 /*
 sketch_canvas, sketch_files, color, aux_canvas, palette_file, current_color_canvas,
 prev_btn_id, reload_btn_id, next_btn_id,undo_btn_id, redo_btn_id, paint_btn_id, erase_btn_id,
-css_class_border, 
+css_class_border, eyedrop_btn_id,
 */
 
-/*
-        eyedrop_btn_id,
+/*        
         sticker_btn_id, cur_sticker_canvas, sticker_file, sticker_x, sticker_y
 */
 
@@ -192,7 +191,7 @@ class PaintEngine {
 
     //mostra borda css (escondendo a dos outros)
     _show_border(id) {
-        if (this.conf.css_class_border) { 
+        if (this.conf.css_class_border) {
             //esconde dos outros
             if (this.conf.erase_btn_id) document.getElementById(this.conf.erase_btn_id).classList.remove(this.conf.css_class_border);
             if (this.conf.paint_btn_id) document.getElementById(this.conf.paint_btn_id).classList.remove(this.conf.css_class_border);

@@ -12,3 +12,6 @@ texteffect -e normal -f Ubuntu-Mono -c DarkGrey -b none -o black -l 10 -t "REDO"
 #test10.html
 texteffect -e normal -f Ubuntu-Mono -c DarkGrey -b none -o black -l 10 -t "PAINT" btn_paint.png
 texteffect -e normal -f Ubuntu-Mono -c DarkGrey -b none -o black -l 10 -t "ERASE" btn_erase.png
+
+#test13.html
+texteffect -e normal -f Ubuntu-Mono -c DarkGrey -b none -o black -l 10 -t "EYEDROP" btn_eyedrop.png

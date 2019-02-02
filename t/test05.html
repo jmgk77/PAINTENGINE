@@ -7,6 +7,7 @@
         var paint_engine = new PaintEngine({
             sketch_canvas: 'canvas1',
             sketch_files: ['draw01.png'],
+            current_color_canvas: 'canvas3'
         });
         window.setInterval(function() {
             paint_engine.color = {
@@ -15,6 +16,7 @@
                 b: Math.floor(Math.random() * 256),
                 a: 0xff
             };
+            paint_engine._show_current_color();
         }, 1000);
         paint_engine.run();
     }
@@ -23,11 +25,12 @@
 
 <body>
     <div style="border:1px solid black;">
-        new PaintEngine( { sketch_canvas: , sketch_files: [ ] } )
+        new PaintEngine( { sketch_canvas: , sketch_files: [ ], current_color_canvas: } )
         <br>
         PaintEngine.color = {};
     </div>
     <br><canvas id="canvas1" width="800" height="600"></canvas>
+    <br><canvas id="canvas3" width="50" height="50"></canvas>
 </body>
 
 </html>

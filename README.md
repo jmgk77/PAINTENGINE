@@ -22,11 +22,18 @@ Requeridos:
 
 Opcionais:
 - color: color object ({r:,g:,b:,a:})
+- aux_canvas: canvas auxiliar para mostrar certas ferramentas
+- palette_file: arquivo com a paleta a ser utilizada
+- current_color_canvas: mini-canvas para mostrar a cor selecionada
 
 *** Tests
 
 test01.html - testa canvas sozinha
 test02.html - testa canvas sozinha, definindo a cor no construtor
-test02.html - testa canvas sozinha, definindo a cor no setter
+test03.html - testa canvas sozinha, definindo a cor no setter
+test04.html - testa canvas e palete
+test05.html - testa canvas e 'cor atual'
+test06.html - testa canvas, palete e 'cor atual'
+
 
 **Unauthorized copying of any files in this project, via any medium is strictly prohibited.**

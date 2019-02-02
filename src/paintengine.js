@@ -3,10 +3,9 @@
 
 'use strict';
 
-/*sketch_canvas, sketch_files, color*/
+/*sketch_canvas, sketch_files, color, aux_canvas, palette_file, current_color_canvas*/
 
-	  /*aux_canvas, cur_color_canvas, palette_file,
-        prev_btn_id, reload_btn_id, next_btn_id,
+/*        prev_btn_id, reload_btn_id, next_btn_id,
         undo_btn_id, redo_btn_id,
         paint_btn_id, 
         erase_btn_id,
@@ -22,11 +21,11 @@ class PaintEngine {
         this.conf = arg_obj;
 
         //checa parametros essenciais
-        if (!this.conf.sketch_canvas) 
+        if (!this.conf.sketch_canvas)
             throw "PaintEngine::constructor(): <sketch_canvas> must be defined";
-        if (!this.conf.sketch_files) 
+        if (!this.conf.sketch_files)
             throw "PaintEngine::constructor(): <sketch_files> must be defined";
-        if (!this.conf.sketch_files.length) 
+        if (!this.conf.sketch_files.length)
             throw "PaintEngine::constructor(): <sketch_files> must be have at least 1 element";
 
         //salva tamanho do array de desenhos e qual é o atual
@@ -35,7 +34,7 @@ class PaintEngine {
 
         //se user não definiu uma cor, usa cor default
         if (!this.conf.color) {
-            this.color = { r: 0x80, g: 0x00, b: 0x80, a: 0xff };
+            this.conf.color = { r: 0x80, g: 0x00, b: 0x80, a: 0xff };
         }
 
         //array do history dos desenhos
@@ -47,8 +46,8 @@ class PaintEngine {
     }
 
     //setter para cor atual
-    set color (c) {
-    	this.conf.color = c;
+    set color(c) {
+        this.conf.color = c;
     }
 
     //roda a bagaça
@@ -182,8 +181,8 @@ class PaintEngine {
 
     //preenche mostruario com a cor atual
     _show_current_color() {
-        if (this.conf.cur_color_canvas) {
-            var canvas = document.getElementById(this.conf.cur_color_canvas);
+        if (this.conf.current_color_canvas) {
+            var canvas = document.getElementById(this.conf.current_color_canvas);
             var ctx = canvas.getContext("2d");
             ctx.fillStyle = 'rgba(' + this.conf.color.r + ',' + this.conf.color.g + ',' + this.conf.color.b + ',' + this.conf.color.a + ')';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -253,7 +252,7 @@ class PaintEngine {
         this._show_current_color();
 
         //carrega paleta na canvas auxiliar
-        if (this.conf.aux_canvas) {
+        if ((this.conf.aux_canvas)&&(this.conf.palette_file)) {
             var ctx = document.getElementById(this.conf.aux_canvas).getContext("2d");
             var img = new Image();
             img.onload = function() {
@@ -308,6 +307,14 @@ class PaintEngine {
         if ((0 === o_colour.r) &&
             (0 === o_colour.g) &&
             (0 === o_colour.b)) return;
+        //muda 'preto absoluto' levmente para preservar linhas de contorno
+        if ((this.conf.color.r === 0) &&
+            (this.conf.color.g === 0) &&
+            (this.conf.color.b === 0)) {
+            this.conf.color.r = 1;
+            this.conf.color.g = 1;
+            this.conf.color.b = 1;
+        }
         //função-ajudante
         var match_colour = function(mod) {
             return (pixels.data[coords + 0 + mod] == o_colour.r &&
@@ -378,6 +385,7 @@ class PaintEngine {
         this._show_sticker();
 
         //carrega spritesheet na canvas auxiliar
+        //### check this.conf.aux_canvas
         var canvas = document.getElementById(this.conf.aux_canvas);
         var ctx = canvas.getContext("2d");
         ctx.fillStyle = 'white';

@@ -7,7 +7,8 @@
         var paint_engine = new PaintEngine({
             sketch_canvas: 'canvas1',
             sketch_files: ['draw01.png'],
-            color: { r: 0x00, g: 0xff, b: 0x00, a: 0xff },
+            aux_canvas: 'canvas2',
+            palette_file: 'palette.png',
         });
         paint_engine.run();
     }
@@ -16,9 +17,10 @@
 
 <body>
     <div style="border:1px solid black;">
-        new PaintEngine( { sketch_canvas: , sketch_files: [ ], color: { r: , g: , b: , a: } } )
+        new PaintEngine( { sketch_canvas: , sketch_files: [ ] }, aux_canvas: , palette_file: )
     </div>
     <br><canvas id="canvas1" width="800" height="600"></canvas>
+    <br><canvas id="canvas2" width="800" height="200"></canvas>
 </body>
 
 </html>

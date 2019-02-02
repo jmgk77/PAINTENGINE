@@ -1,0 +1,28 @@
+<!DOCTYPE HTML>
+
+<head>
+    <script type="text/javascript" src="../src/paintengine.js"> </script>
+    <script>
+    window.onload = function() {
+        var paint_engine = new PaintEngine({
+            sketch_canvas: 'canvas1',
+            sketch_files: ['draw01.png'],
+            paint_btn_id: 'btn_paint',
+            erase_btn_id: 'btn_erase',
+        });
+        paint_engine.run();
+    }
+    </script>
+</head>
+
+<body>
+    <div style="border:1px solid black;">
+        new PaintEngine( { sketch_canvas: , sketch_files: [ ] } , paint_btn_id: , erase_btn_id: )
+    </div>
+    <br><canvas id="canvas1" width="800" height="600"></canvas>
+    <br>
+    <img id='btn_paint' src='btn_paint.png'>
+    <img id='btn_erase' src='btn_erase.png'>
+</body>
+
+</html>

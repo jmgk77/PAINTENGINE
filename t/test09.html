@@ -1,0 +1,28 @@
+<!DOCTYPE HTML>
+
+<head>
+    <script type="text/javascript" src="../src/paintengine.js"> </script>
+    <script>
+    window.onload = function() {
+        var paint_engine = new PaintEngine({
+            sketch_canvas: 'canvas1',
+            sketch_files: ['draw01.png'],
+            undo_btn_id: 'btn_undo',
+            redo_btn_id: 'btn_redo',
+        });
+        paint_engine.run();
+    }
+    </script>
+</head>
+
+<body>
+    <div style="border:1px solid black;">
+        new PaintEngine( { sketch_canvas: , sketch_files: [ ] } , undo_btn_id: , undo_btn_id: )
+    </div>
+    <br><canvas id="canvas1" width="800" height="600"></canvas>
+    <br>
+    <img id='btn_undo' src='btn_undo.png'>
+    <img id='btn_redo' src='btn_redo.png'>
+</body>
+
+</html>

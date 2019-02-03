@@ -1,0 +1,33 @@
+<!DOCTYPE HTML>
+
+<head>
+    <script type="text/javascript" src="../src/paintengine.js"> </script>
+    <script>
+    window.onload = function() {
+        var paint_engine = new PaintEngine({
+            sketch_canvas: 'canvas1',
+            sketch_files: ['no-file'],
+            sticker_canvas: 'canvas2',
+            sticker_file: 'stickers.png',
+            sticker_x: 3,
+            sticker_y: 3,
+            current_sticker_canvas: 'canvas3',
+            sticker_scale_x: 2,
+            sticker_scale_y: 2,
+        });
+        paint_engine.run();
+        paint_engine.sticker();
+    }
+    </script>
+</head>
+
+<body>
+    <div style="border:1px solid black;">
+        new PaintEngine( { sketch_canvas: , sketch_files: [ ] } , sticker_canvas: , sticker_file: , sticker_x: , sticker_y: , current_sticker_canvas: , sticker_scale_x: , sticker_scale_y: )
+    </div>
+    <br><canvas id="canvas1" width="800" height="600"></canvas>
+    <br><canvas id="canvas3" width="200" height="200"></canvas>
+    <br><canvas id="canvas2" width="300" height="300"></canvas>
+</body>
+
+</html>

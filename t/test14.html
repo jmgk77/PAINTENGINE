@@ -6,21 +6,24 @@
     window.onload = function() {
         var paint_engine = new PaintEngine({
             sketch_canvas: 'canvas1',
-            sketch_files: ['draw01.png'],
-            palette_canvas: 'canvas2',
-            palette_file: 'palette.png',
+            sketch_files: ['no-file'],
+            sticker_canvas: 'canvas2',
+            sticker_file: 'stickers.png',
+            sticker_x: 3,
+            sticker_y: 3,
         });
         paint_engine.run();
+        paint_engine.sticker();
     }
     </script>
 </head>
 
 <body>
     <div style="border:1px solid black;">
-        new PaintEngine( { sketch_canvas: , sketch_files: [ ] } , palette_canvas: , palette_file: )
+        new PaintEngine( { sketch_canvas: , sketch_files: [ ] } , sticker_canvas: , sticker_file: , sticker_x: , sticker_y: )
     </div>
     <br><canvas id="canvas1" width="800" height="600"></canvas>
-    <br><canvas id="canvas2" width="800" height="200"></canvas>
+    <br><canvas id="canvas2" width="300" height="300"></canvas>
 </body>
 
 </html>

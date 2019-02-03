@@ -32,8 +32,8 @@ Requeridos:
 
 Opcionais:
 - color: color object ({r:,g:,b:,a:})
-- aux_canvas: canvas auxiliar para mostrar certas ferramentas
-- palette_file: arquivo com a paleta a ser utilizada
+- palette_file: arquivo com a paleta a ser utilizada (tem que ter o tamanho de palette_canvas)
+- palette_canvas: canvas auxiliar para mostrar a paletter
 - current_color_canvas: mini-canvas para mostrar a cor selecionada
 
 - css_class_border: nome da classe css para bordas de botões
@@ -48,6 +48,15 @@ Opcionais:
 - paint_btn_id: id of botão pintar
 - erase_btn_id: id of botão apagar
 - eyedrop_btn_id: id do botão eyedrop
+
+- sticker_btn_id: id do botão sticker
+- sticker_file: arquivo com a spritesheet dos stickers (tem que ter o tamanho de sticker_canvas)
+- sticker_canvas: canvas auxiliar para mostrar os stickers
+- sticker_x: numero x de stickers
+- sticker_y: numero y de stickers
+- current_sticker_canvas: mini-canvas para mostrar sticker selecionado
+- sticker_scale_x: escala X do sticker em relação ao mini-canvas
+- sticker_scale_y: escala Y do sticker em relação ao mini-canvas
 
 
 
@@ -66,6 +75,10 @@ test10.html - testa pintar e apagar
 test11.html - testa pintar, apagar e canvas 'cor atual'
 test12.html - testa pintar, apagar e 'css border'
 test13.html - testa pintar, eyedrop, palete, canvas 'cor atual' e 'css border'
+test14.html - testa sticker
+test15.html - testa sticker, canvas 'sticker atual' e sticker_scale_x/sticker_scale_y
+test16.html - testa canvas, palete, canvas 'cor atual', navegação, undo e redo, apagar , eyedrop, stickers, canvas 'sticker atual' e 'css border'
+test17.html - igual que acima, palette_canvas/sticker_canvas e current_color_canvas/current_color_canvas compartilhado (usa sticker_scale_)
 
 
 

@@ -15,3 +15,6 @@ texteffect -e normal -f Ubuntu-Mono -c DarkGrey -b none -o black -l 10 -t "ERASE
 
 #test13.html
 texteffect -e normal -f Ubuntu-Mono -c DarkGrey -b none -o black -l 10 -t "EYEDROP" btn_eyedrop.png
+
+#test14.html
+texteffect -e normal -f Ubuntu-Mono -c DarkGrey -b none -o black -l 10 -t "STICKER" btn_sticker.png

@@ -1,0 +1,65 @@
+<!DOCTYPE HTML>
+
+<head>
+    <style>
+        .tool_selected {
+            border-width: 3px;
+            border-style: inset;
+            border-color: black;
+        }
+    </style>
+    <script type="text/javascript" src="../src/paintengine.js"> </script>
+    <script>
+    window.onload = function() {
+        var paint_engine = new PaintEngine({
+            sketch_canvas: 'canvas1',
+            sketch_files: ['draw01.png', 'draw02.png'],
+            paint_btn_id: 'btn_paint',
+            eyedrop_btn_id: 'btn_eyedrop',
+            css_class_border: 'tool_selected',
+            palette_canvas: 'canvas2',
+            palette_file: 'palette.png',
+            current_color_canvas: 'canvas3',
+            sticker_file: 'stickers.png',
+            sticker_x: 3,
+            sticker_y: 3,
+            sticker_canvas: 'canvas5',
+            current_sticker_canvas: 'canvas4',
+            undo_btn_id: 'btn_undo',
+            redo_btn_id: 'btn_redo',
+            prev_btn_id: 'btn_prev',
+            reload_btn_id: 'btn_reload',
+            next_btn_id: 'btn_next',
+            erase_btn_id: 'btn_erase',
+            sticker_btn_id: 'btn_sticker',
+        });
+        paint_engine.run();
+    }
+    </script>
+</head>
+
+<body>
+    <div style="border:1px solid black;">
+        new PaintEngine( { sketch_canvas: , sketch_files: , paint_btn_id: , eyedrop_btn_id: , css_class_border: , palette_canvas: , palette_file: , current_color_canvas: , sticker_file: , sticker_x: , sticker_y: , sticker_canvas: , current_sticker_canvas: , undo_btn_id: , redo_btn_id: ', prev_btn_id: , reload_btn_id: , next_btn_id: , erase_btn_id: , sticker_btn_id: )
+    </div>
+    <br><canvas id="canvas1" width="800" height="600"></canvas>
+    <br>
+    <canvas id="canvas3" width="50" height="50"></canvas>
+    <canvas id="canvas4" width="100" height="100"></canvas>
+    <br>
+    <img id='btn_prev' src='btn_prev.png'>
+    <img id='btn_reload' src='btn_reload.png'>
+    <img id='btn_next' src='btn_next.png'>
+    <br>
+    <img id='btn_undo' src='btn_undo.png'>
+    <img id='btn_redo' src='btn_redo.png'>
+    <br>
+    <img id='btn_paint' src='btn_paint.png'>
+    <img id='btn_eyedrop' src='btn_eyedrop.png'>
+    <img id='btn_erase' src='btn_erase.png'>
+    <img id='btn_sticker' src='btn_sticker.png'>
+    <br><canvas id="canvas2" width="800" height="200"></canvas>
+    <br><canvas id="canvas5" width="300" height="300"></canvas>
+</body>
+
+</html>

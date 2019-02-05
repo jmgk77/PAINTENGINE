@@ -31,7 +31,7 @@ Requeridos:
 - sketch_files: array of sketchs filenames
 
 Opcionais:
-- color: color object ({r:,g:,b:,a:})
+- color: default color object ({r:,g:,b:,a:})
 - palette_file: arquivo com a paleta a ser utilizada (tem que ter o tamanho de palette_canvas)
 - palette_canvas: canvas auxiliar para mostrar a paletter
 - current_color_canvas: mini-canvas para mostrar a cor selecionada
@@ -56,6 +56,9 @@ Opcionais:
 - sticker_y: numero y de stickers
 - current_sticker_canvas: mini-canvas para mostrar sticker selecionado
 
+- color_blacklist: array de color object [{r:,g:,b:,a:}] onde as ferramentas não funcionam
+- color_transparency: array de color object [{r:,g:,b:,a:}] transparentes nos stickers
+
 
 
 ***TESTES***
@@ -75,8 +78,10 @@ test12.html - testa pintar, apagar e 'css border'
 test13.html - testa pintar, eyedrop, palete, canvas 'cor atual' e 'css border'
 test14.html - testa sticker
 test15.html - testa sticker e canvas 'sticker atual'
-test16.html - testa canvas, palete, canvas 'cor atual', navegação, undo e redo, apagar , eyedrop, stickers, canvas 'sticker atual' e 'css border'
+test16.html - testa canvas, palete, canvas 'cor atual', navegação, undo e redo, apagar, eyedrop, stickers, canvas 'sticker atual' e 'css border'
 test17.html - igual que acima, palette_canvas/sticker_canvas e current_color_canvas/current_color_canvas compartilhado
+test18.html - igual que acima, color_blacklist
+test19.html - testa sticker, color_transparency
 
 
 

@@ -7,7 +7,7 @@
 sketch_canvas, sketch_files, color, palette_canvas, palette_file, current_color_canvas,
 prev_btn_id, reload_btn_id, next_btn_id,undo_btn_id, redo_btn_id, paint_btn_id, erase_btn_id,
 css_class_border, eyedrop_btn_id, sticker_btn_id, sticker_file, sticker_x, sticker_y, 
-current_sticker_canvas, sticker_btn_id:
+current_sticker_canvas, color_blacklist, color_transparency
 */
 
 class PaintEngine {
@@ -15,31 +15,43 @@ class PaintEngine {
     //init
     constructor(arg_obj) {
         //copy user params
-        this.conf = arg_obj;
+        this.user = arg_obj;
 
         //checa parametros essenciais
-        if (!this.conf.sketch_canvas)
+        if (!this.user.sketch_canvas)
             throw "PaintEngine::constructor(): <sketch_canvas> must be defined";
-        if (!this.conf.sketch_files)
+        if (!this.user.sketch_files)
             throw "PaintEngine::constructor(): <sketch_files> must be defined";
-        if (!this.conf.sketch_files.length)
+        if (!this.user.sketch_files.length)
             throw "PaintEngine::constructor(): <sketch_files> must be have at least 1 element";
 
         //salva tamanho do array de desenhos e qual é o atual
-        this.max_sketchs = this.conf.sketch_files.length - 1;
+        this.max_sketchs = this.user.sketch_files.length - 1;
         this.cur_sketch = 0;
 
         //se user não definiu uma cor, usa cor default
-        if (!this.conf.color) {
-            this.conf.color = { r: 0x80, g: 0x00, b: 0x80, a: 0xff };
+        if (!this.user.color) {
+            this.user.color = { r: 0x80, g: 0x00, b: 0x80, a: 0xff };
+        }
+
+        //se user não definiu as cores proibidas, permitidas, e de transparencia, usa defaults
+        //cores sob as quais as ferramentas NÃO FUNCIONAM
+        if (!this.user.color_blacklist) {
+            //'preto absoluto' é reservado para linhas
+            this.user.color_blacklist = [{ r: 0x00, g: 0x00, b: 0x00, a: 0xff }];
+        }
+        //cores sob as quais é aplicada transparencia
+        if (!this.user.color_transparency) {
+            //'branco absoluto' é o fundo dos stickers
+            this.user.color_transparency = [{ r: 0xff, g: 0xff, b: 0xff, a: 0xff }];
         }
 
         //escala sticker escolhido em relação ao mini-canvas
-        if ((this.conf.sticker_canvas) && (this.conf.current_sticker_canvas)) {
-            var c = document.getElementById(this.conf.current_sticker_canvas);
-            var c2 = document.getElementById(this.conf.sticker_canvas);
-            this.sticker_scale_x = c.width / (c2.width / this.conf.sticker_x);
-            this.sticker_scale_y = c.height / (c2.height / this.conf.sticker_y);
+        if ((this.user.sticker_canvas) && (this.user.current_sticker_canvas)) {
+            var c = document.getElementById(this.user.current_sticker_canvas);
+            var c2 = document.getElementById(this.user.sticker_canvas);
+            this.sticker_scale_x = c.width / (c2.width / this.user.sticker_x);
+            this.sticker_scale_y = c.height / (c2.height / this.user.sticker_y);
         }
 
         //array do history dos desenhos
@@ -52,67 +64,67 @@ class PaintEngine {
 
     //setter para cor atual
     set color(c) {
-        this.conf.color = c;
+        this.user.color = c;
     }
 
     //roda a bagaça
     run() {
         //handler para usar a ferramenta atual no desenho
-        document.getElementById(this.conf.sketch_canvas).onclick = function(e) {
+        document.getElementById(this.user.sketch_canvas).onclick = function(e) {
             this.tool(e);
         }.bind(this);
 
         //handler para ir para esenho anterior
-        if (this.conf.prev_btn_id) {
-            document.getElementById(this.conf.prev_btn_id).onclick = function() {
+        if (this.user.prev_btn_id) {
+            document.getElementById(this.user.prev_btn_id).onclick = function() {
                 this.load_sketch(-1);
             }.bind(this);
         }
         //handler para ir para proximo desenho
-        if (this.conf.next_btn_id) {
-            document.getElementById(this.conf.next_btn_id).onclick = function() {
+        if (this.user.next_btn_id) {
+            document.getElementById(this.user.next_btn_id).onclick = function() {
                 this.load_sketch(1);
             }.bind(this);
         }
         //handler para limpar desenho
-        if (this.conf.reload_btn_id) {
-            document.getElementById(this.conf.reload_btn_id).onclick = function() {
+        if (this.user.reload_btn_id) {
+            document.getElementById(this.user.reload_btn_id).onclick = function() {
                 this.load_sketch(0);
             }.bind(this);
         }
         //handler para voltar o ultimo comando
-        if (this.conf.undo_btn_id) {
-            document.getElementById(this.conf.undo_btn_id).onclick = function() {
+        if (this.user.undo_btn_id) {
+            document.getElementById(this.user.undo_btn_id).onclick = function() {
                 this.back_history();
             }.bind(this);
         }
         //handler para refazer o ultimo comando
-        if (this.conf.redo_btn_id) {
-            document.getElementById(this.conf.redo_btn_id).onclick = function() {
+        if (this.user.redo_btn_id) {
+            document.getElementById(this.user.redo_btn_id).onclick = function() {
                 this.redo_history();
             }.bind(this);
         }
         //handler para ferramenta 'pintar' (preencher)
-        if (this.conf.paint_btn_id) {
-            document.getElementById(this.conf.paint_btn_id).onclick = function() {
+        if (this.user.paint_btn_id) {
+            document.getElementById(this.user.paint_btn_id).onclick = function() {
                 this.paint();
             }.bind(this);
         }
         //handler para ferramenta 'apagar' (pintar com branco)
-        if (this.conf.erase_btn_id) {
-            document.getElementById(this.conf.erase_btn_id).onclick = function() {
+        if (this.user.erase_btn_id) {
+            document.getElementById(this.user.erase_btn_id).onclick = function() {
                 this.erase();
             }.bind(this);
         }
         //handler para ferramenta 'eyedrop' (pegar cor)
-        if (this.conf.eyedrop_btn_id) {
-            document.getElementById(this.conf.eyedrop_btn_id).onclick = function() {
+        if (this.user.eyedrop_btn_id) {
+            document.getElementById(this.user.eyedrop_btn_id).onclick = function() {
                 this.eyedrop();
             }.bind(this);
         }
         //handler para ferramenta 'sticker' (adiciona figurinhas duma spritesheet)
-        if (this.conf.sticker_btn_id) {
-            document.getElementById(this.conf.sticker_btn_id).onclick = function() {
+        if (this.user.sticker_btn_id) {
+            document.getElementById(this.user.sticker_btn_id).onclick = function() {
                 this.sticker();
             }.bind(this);
         }
@@ -121,20 +133,20 @@ class PaintEngine {
         this.load_sketch(0);
 
         //simula escolha da ferramenta default
-        this.paint_color = this.conf.color;
+        this.paint_color = this.user.color;
         this.paint();
     }
 
     //carrega desenho
     load_sketch(mod) {
-        var ctx = document.getElementById(this.conf.sketch_canvas).getContext("2d");
+        var ctx = document.getElementById(this.user.sketch_canvas).getContext("2d");
         var imageObj = new Image();
         imageObj.onload = function() {
             ctx.drawImage(imageObj, 0, 0);
         };
         this.cur_sketch += mod;
         this.cur_sketch = ((this.cur_sketch < 0) ? this.max_sketchs : ((this.cur_sketch > this.max_sketchs) ? 0 : this.cur_sketch));
-        imageObj.src = this.conf.sketch_files[this.cur_sketch];
+        imageObj.src = this.user.sketch_files[this.cur_sketch];
 
         //esvazia history quando muda de desenho
         this.history_a.length = 0;
@@ -146,7 +158,7 @@ class PaintEngine {
         if ((this.history_a.length) && (this.history_ptr > 0)) {
             //salva tela atual no history, para poder voltar pra ela, se estivermos nos final da lista
             if (this.history_a.length == this.history_ptr) {
-                this.history_a[this.history_ptr] = (document.getElementById(this.conf.sketch_canvas).toDataURL("image/png"));
+                this.history_a[this.history_ptr] = (document.getElementById(this.user.sketch_canvas).toDataURL("image/png"));
             }
             //ajusta ponteiro para entrada anterior do history
             this.history_ptr--;
@@ -155,7 +167,7 @@ class PaintEngine {
         }
     }
 
-    //refazer um passo na history (###não ta refazendo ultimo passo)
+    //refazer um passo na history
     redo_history() {
         //temos uma history e não estamos no começo dela
         if ((this.history_a.length) && (this.history_ptr < this.history_a.length)) {
@@ -168,7 +180,7 @@ class PaintEngine {
 
     //copia history na canvas
     _canvas_history_update() {
-        var ctx = document.getElementById(this.conf.sketch_canvas).getContext("2d");
+        var ctx = document.getElementById(this.user.sketch_canvas).getContext("2d");
         var img = new Image();
         img.onload = function() {
             ctx.drawImage(img, 0, 0);
@@ -179,47 +191,47 @@ class PaintEngine {
     //salva desenho atual no history
     _save_history() {
         //adiciona modificações 
-        this.history_a[this.history_ptr] = (document.getElementById(this.conf.sketch_canvas).toDataURL("image/png"));
+        this.history_a[this.history_ptr] = (document.getElementById(this.user.sketch_canvas).toDataURL("image/png"));
         //ajusta ponteiro para proxima entrada do history e passo atual vira o ultimo
         this.history_a.length = ++this.history_ptr;
     }
 
     //preenche mostruario com a cor atual
     _show_current_color() {
-        if (this.conf.current_color_canvas) {
-            var canvas = document.getElementById(this.conf.current_color_canvas);
+        if (this.user.current_color_canvas) {
+            var canvas = document.getElementById(this.user.current_color_canvas);
             var ctx = canvas.getContext("2d");
-            ctx.fillStyle = 'rgba(' + this.conf.color.r + ',' + this.conf.color.g + ',' + this.conf.color.b + ',' + this.conf.color.a + ')';
+            ctx.fillStyle = 'rgba(' + this.user.color.r + ',' + this.user.color.g + ',' + this.user.color.b + ',' + this.user.color.a + ')';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
         }
     }
 
     //mostra borda css (escondendo a dos outros)
     _show_border(id) {
-        if (this.conf.css_class_border) {
+        if (this.user.css_class_border) {
             //esconde dos outros
-            if (this.conf.erase_btn_id)
-                document.getElementById(this.conf.erase_btn_id).classList.remove(this.conf.css_class_border);
-            if (this.conf.paint_btn_id)
-                document.getElementById(this.conf.paint_btn_id).classList.remove(this.conf.css_class_border);
-            if (this.conf.eyedrop_btn_id)
-                document.getElementById(this.conf.eyedrop_btn_id).classList.remove(this.conf.css_class_border);
-            if (this.conf.sticker_btn_id)
-                document.getElementById(this.conf.sticker_btn_id).classList.remove(this.conf.css_class_border);
+            if (this.user.erase_btn_id)
+                document.getElementById(this.user.erase_btn_id).classList.remove(this.user.css_class_border);
+            if (this.user.paint_btn_id)
+                document.getElementById(this.user.paint_btn_id).classList.remove(this.user.css_class_border);
+            if (this.user.eyedrop_btn_id)
+                document.getElementById(this.user.eyedrop_btn_id).classList.remove(this.user.css_class_border);
+            if (this.user.sticker_btn_id)
+                document.getElementById(this.user.sticker_btn_id).classList.remove(this.user.css_class_border);
             //mostra nossa
-            if (id) document.getElementById(id).classList.add(this.conf.css_class_border);
+            if (id) document.getElementById(id).classList.add(this.user.css_class_border);
         }
     }
 
     //erase tool (pinta com branco)
     erase() {
         //tira bordinha dos outros e bota na gente
-        this._show_border(this.conf.erase_btn_id);
+        this._show_border(this.user.erase_btn_id);
         //seta ferramenta atual para bucket_tool
         this.tool = this.bucket_tool;
 
         //apagar é pintar com branco (nao mexe na .paint_color)
-        this.conf.color = {
+        this.user.color = {
             r: 255,
             g: 255,
             b: 255,
@@ -231,48 +243,69 @@ class PaintEngine {
     //eyedrop tool
     eyedrop() {
         //tira bordinha dos outros e bota na gente
-        this._show_border(this.conf.eyedrop_btn_id);
+        this._show_border(this.user.eyedrop_btn_id);
         //seta ferramenta atual para bucket_tool
         this.tool = this.eyedropper_tool;
     }
 
     //pega a cor clicada no desenho
     eyedropper_tool(e) {
+        this._get_color_xy(this.user.sketch_canvas, e);
+    }
+
+    //pega a cor na posição xy do canvas
+    _get_color_xy(canvas, e) {
         //pega cor clicada pelo mouse
-        var ctx = document.getElementById(this.conf.sketch_canvas).getContext("2d");
+        var ctx = document.getElementById(canvas).getContext("2d");
         var imgData = ctx.getImageData(e.offsetX, e.offsetY, 1, 1);
-        this.paint_color = this.conf.color = {
+        //checa se a cor clicada é permitida
+        var c = {
             r: imgData.data[0],
             g: imgData.data[1],
             b: imgData.data[2],
-            a: 255
+            a: imgData.data[3]
+        }
+        if (!this._check_color_in_list(c, this.user.color_blacklist)) {
+            //escolhe essa cor
+            this.paint_color = this.user.color = c;
+            //se escolheu cor é pq quer pintar (???)
+            this.paint();
+        }
+    }
+
+    //checa se a cor não está em color_blacklist 
+    _check_color_in_list(c, list) {
+        //console.log(c.r + ',' + c.g + ',' + c.b + ',' + c.a);
+        for (var i = 0; i < list.length; i++) {
+            if ((c.r === list[i].r) &&
+                (c.g === list[i].g) &&
+                (c.b === list[i].b)) return true;
         };
-        //se escolheu cor é pq quer pintar (???)
-        this.paint();
+        return false;
     }
 
     //paint tool
     paint() {
         //tira bordinha dos outros e bota na gente
-        this._show_border(this.conf.paint_btn_id);
+        this._show_border(this.user.paint_btn_id);
         //seta ferramenta atual para bucket_tool
         this.tool = this.bucket_tool;
 
         //retorna a cor escolhida por color_picker()
-        this.conf.color = this.paint_color;
+        this.user.color = this.paint_color;
         this._show_current_color();
 
         //carrega paleta na canvas auxiliar
-        if ((this.conf.palette_canvas) && (this.conf.palette_file)) {
-            var ctx = document.getElementById(this.conf.palette_canvas).getContext("2d");
+        if ((this.user.palette_canvas) && (this.user.palette_file)) {
+            var ctx = document.getElementById(this.user.palette_canvas).getContext("2d");
             var img = new Image();
             img.onload = function() {
                 ctx.drawImage(img, 0, 0);
             };
-            img.src = this.conf.palette_file;
+            img.src = this.user.palette_file;
 
             //handler para escolha de cor na paleta ao clicar na paleta auxiliar
-            document.getElementById(this.conf.palette_canvas).onclick = function(e) {
+            document.getElementById(this.user.palette_canvas).onclick = function(e) {
                 this.color_picker(e);
             }.bind(this);
         }
@@ -280,23 +313,13 @@ class PaintEngine {
 
     //pega a cor clicada na paleta
     color_picker(e) {
-        //pega cor clicada pelo mouse
-        var ctx = document.getElementById(this.conf.palette_canvas).getContext("2d");
-        var imgData = ctx.getImageData(e.offsetX, e.offsetY, 1, 1);
-        this.paint_color = this.conf.color = {
-            r: imgData.data[0],
-            g: imgData.data[1],
-            b: imgData.data[2],
-            a: 255
-        };
-        //se escolheu cor é pq quer pintar (???)
-        this.paint();
+        this._get_color_xy(this.user.palette_canvas, e);
     }
 
     //preenche a forma clicada
     bucket_tool(e) {
         //pinta
-        var canvas = document.getElementById(this.conf.sketch_canvas);
+        var canvas = document.getElementById(this.user.sketch_canvas);
         var ctx = canvas.getContext("2d");
 
         //https://ben.akrin.com/?p=7888 (method #4)
@@ -310,22 +333,11 @@ class PaintEngine {
             a: pixels.data[coords + 3]
         };
 
-        //sai se tentar pintar o que ja tem essa mesma cor (fix para hangs)
-        if ((this.conf.color.r === o_colour.r) &&
-            (this.conf.color.g === o_colour.g) &&
-            (this.conf.color.b === o_colour.b)) return;
-        //sai se tenta pintar 'preto absoluto' (cor reservada para as bordas dos desenhos)
-        if ((0 === o_colour.r) &&
-            (0 === o_colour.g) &&
-            (0 === o_colour.b)) return;
-        //muda 'preto absoluto' levmente para preservar linhas de contorno
-        if ((this.conf.color.r === 0) &&
-            (this.conf.color.g === 0) &&
-            (this.conf.color.b === 0)) {
-            this.conf.color.r = 1;
-            this.conf.color.g = 1;
-            this.conf.color.b = 1;
-        }
+        //adiciona a cor atual na lista proibida (para evitar pintar o que ja tem a mesma cor - hang)
+        var l = [...this.user.color_blacklist, this.user.color];
+        //e sai se tenta pintar cor reservada 
+        if (this._check_color_in_list(o_colour, l)) return;
+
         //função-ajudante
         var match_colour = function(mod) {
             return (pixels.data[coords + 0 + mod] == o_colour.r &&
@@ -352,10 +364,10 @@ class PaintEngine {
             var reached_left = false;
             var reached_right = false;
             while ((y++ < canvas.height) && match_colour(0)) {
-                pixels.data[coords] = this.conf.color.r;
-                pixels.data[coords + 1] = this.conf.color.g;
-                pixels.data[coords + 2] = this.conf.color.b;
-                pixels.data[coords + 3] = this.conf.color.a;
+                pixels.data[coords] = this.user.color.r;
+                pixels.data[coords + 1] = this.user.color.g;
+                pixels.data[coords + 2] = this.user.color.b;
+                pixels.data[coords + 3] = this.user.color.a;
 
                 if (x > 0) {
                     if (match_colour(-4)) {
@@ -387,13 +399,13 @@ class PaintEngine {
 
     //sticker tool
     sticker() {
-        if ((this.conf.sticker_canvas) &&
-            (this.conf.sticker_file) &&
-            (this.conf.sticker_x) &&
-            (this.conf.sticker_y)) {
+        if ((this.user.sticker_canvas) &&
+            (this.user.sticker_file) &&
+            (this.user.sticker_x) &&
+            (this.user.sticker_y)) {
 
             //tira bordinha dos outros e bota na gente
-            this._show_border(this.conf.sticker_btn_id);
+            this._show_border(this.user.sticker_btn_id);
             //seta ferramenta atual para bucket_tool
             this.tool = this.sticker_tool;
 
@@ -401,7 +413,7 @@ class PaintEngine {
             this._show_sticker();
 
             //carrega spritesheet na canvas auxiliar
-            var canvas = document.getElementById(this.conf.sticker_canvas);
+            var canvas = document.getElementById(this.user.sticker_canvas);
             var ctx = canvas.getContext("2d");
             ctx.fillStyle = 'white';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -409,14 +421,14 @@ class PaintEngine {
             img.onload = function() {
                 ctx.drawImage(img, 0, 0);
             };
-            img.src = this.conf.sticker_file;
+            img.src = this.user.sticker_file;
 
             //calcula tamanho X e Y de cada sticker
-            this.sticker_size_x = canvas.width / this.conf.sticker_x;
-            this.sticker_size_y = canvas.height / this.conf.sticker_y;
+            this.sticker_size_x = canvas.width / this.user.sticker_x;
+            this.sticker_size_y = canvas.height / this.user.sticker_y;
 
             //handler para escolha de sprite na spritesheet ao clicar na canvas auxiliar
-            document.getElementById(this.conf.sticker_canvas).onclick = function(e) {
+            document.getElementById(this.user.sticker_canvas).onclick = function(e) {
                 this.sticker_picker(e);
             }.bind(this);
         }
@@ -424,30 +436,41 @@ class PaintEngine {
 
     //larga current sticker em x,y
     sticker_tool(e) {
-        if (this.cur_sticker_cvs) {
-            //salva desenho atual no history
-            this._save_history();
-
-            //printa sticker 
-            var ctx = document.getElementById(this.conf.sketch_canvas).getContext("2d");
-            ctx.drawImage(this.cur_sticker_cvs, e.offsetX - (this.sticker_size_x / 2), e.offsetY - (this.sticker_size_y / 2));
+        if (this.temp_sticker_canvas) {
+            var canvas = document.getElementById(this.user.sketch_canvas);
+            var ctx = canvas.getContext("2d");
+            //pega cor do destino
+            var p = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            var c = {
+                r: p.data[((e.offsetY * canvas.width + e.offsetX) * 4)],
+                g: p.data[((e.offsetY * canvas.width + e.offsetX) * 4) + 1],
+                b: p.data[((e.offsetY * canvas.width + e.offsetX) * 4) + 2],
+                a: p.data[((e.offsetY * canvas.width + e.offsetX) * 4) + 3]
+            };
+            //e somente bota sticker se a cor não é reservada 
+            if (!this._check_color_in_list(c, this.user.color_blacklist)) {
+                //salva desenho atual no history
+                this._save_history();
+                //printa sticker 
+                ctx.drawImage(this.temp_sticker_canvas, e.offsetX - (this.sticker_size_x / 2), e.offsetY - (this.sticker_size_y / 2));
+            }
         }
     }
 
     _show_sticker() {
         //mostra current icon no sticker_cvs
-        if (this.conf.current_sticker_canvas) {
-            var canvas = document.getElementById(this.conf.current_sticker_canvas);
+        if (this.user.current_sticker_canvas) {
+            var canvas = document.getElementById(this.user.current_sticker_canvas);
             var ctx = canvas.getContext("2d");
             ctx.fillStyle = 'white';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
-            if (this.cur_sticker_cvs) {
+            if (this.temp_sticker_canvas) {
                 //desenha ampliado
                 ctx.save();
                 if ((this.sticker_scale_x != 1) && (this.sticker_scale_y != 1)) {
                     ctx.scale(this.sticker_scale_x, this.sticker_scale_y);
                 }
-                ctx.drawImage(this.cur_sticker_cvs, 0, 0);
+                ctx.drawImage(this.temp_sticker_canvas, 0, 0);
                 ctx.restore();
             }
         }
@@ -460,24 +483,31 @@ class PaintEngine {
         var sticker_y = Math.floor(e.offsetY / this.sticker_size_y) * this.sticker_size_y;
 
         //pega sticker da canvas auxiliar
-        var ctx = document.getElementById(this.conf.sticker_canvas).getContext("2d");
+        var ctx = document.getElementById(this.user.sticker_canvas).getContext("2d");
         var cur_sticker = ctx.getImageData(sticker_x, sticker_y, this.sticker_size_x, this.sticker_size_y);
 
-        //cria canvas para apenas esse sticker
-        this.cur_sticker_cvs = document.createElement('canvas');
-        this.cur_sticker_cvs.width = cur_sticker.width;
-        this.cur_sticker_cvs.height = cur_sticker.height;
+        //cria canvas temporario para apenas esse sticker
+        this.temp_sticker_canvas = document.createElement('canvas');
+        this.temp_sticker_canvas.width = cur_sticker.width;
+        this.temp_sticker_canvas.height = cur_sticker.height;
 
         //deixa transparente
         var imageData = cur_sticker.data;
         for (var i = 0; i < imageData.length; i += 4) {
-            if (imageData[i]) {
+            //pega cor atual
+            var c = {
+                r: imageData[i + 0],
+                g: imageData[i + 1],
+                b: imageData[i + 2],
+                a: imageData[i + 3]
+            }
+            //checa se essa cor deve ficar transparente
+            if (this._check_color_in_list(c, this.user.color_transparency)) {
                 imageData[i + 3] = 0;
             }
         }
         //e coloca o sticker na canvas
-        this.cur_sticker_cvs.getContext("2d").putImageData(cur_sticker, 0, 0);
-
+        this.temp_sticker_canvas.getContext("2d").putImageData(cur_sticker, 0, 0);
         //se escolheu sticker é pq quer stickar? (???)
         this.sticker();
     }

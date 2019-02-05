@@ -7,7 +7,7 @@
 sketch_canvas, sketch_files, color, palette_canvas, palette_file, current_color_canvas,
 prev_btn_id, reload_btn_id, next_btn_id,undo_btn_id, redo_btn_id, paint_btn_id, erase_btn_id,
 css_class_border, eyedrop_btn_id, sticker_btn_id, sticker_file, sticker_x, sticker_y, 
-current_sticker_canvas, sticker_scale, sticker_btn_id:
+current_sticker_canvas, sticker_btn_id:
 */
 
 class PaintEngine {
@@ -32,6 +32,14 @@ class PaintEngine {
         //se user não definiu uma cor, usa cor default
         if (!this.conf.color) {
             this.conf.color = { r: 0x80, g: 0x00, b: 0x80, a: 0xff };
+        }
+
+        //escala sticker escolhido em relação ao mini-canvas
+        if ((this.conf.sticker_canvas) && (this.conf.current_sticker_canvas)) {
+            var c = document.getElementById(this.conf.current_sticker_canvas);
+            var c2 = document.getElementById(this.conf.sticker_canvas);
+            this.sticker_scale_x = c.width / (c2.width / this.conf.sticker_x);
+            this.sticker_scale_y = c.height / (c2.height / this.conf.sticker_y);
         }
 
         //array do history dos desenhos
@@ -190,10 +198,14 @@ class PaintEngine {
     _show_border(id) {
         if (this.conf.css_class_border) {
             //esconde dos outros
-            if (this.conf.erase_btn_id) document.getElementById(this.conf.erase_btn_id).classList.remove(this.conf.css_class_border);
-            if (this.conf.paint_btn_id) document.getElementById(this.conf.paint_btn_id).classList.remove(this.conf.css_class_border);
-            if (this.conf.eyedrop_btn_id) document.getElementById(this.conf.eyedrop_btn_id).classList.remove(this.conf.css_class_border);
-            if (this.conf.sticker_btn_id) document.getElementById(this.conf.sticker_btn_id).classList.remove(this.conf.css_class_border);
+            if (this.conf.erase_btn_id)
+                document.getElementById(this.conf.erase_btn_id).classList.remove(this.conf.css_class_border);
+            if (this.conf.paint_btn_id)
+                document.getElementById(this.conf.paint_btn_id).classList.remove(this.conf.css_class_border);
+            if (this.conf.eyedrop_btn_id)
+                document.getElementById(this.conf.eyedrop_btn_id).classList.remove(this.conf.css_class_border);
+            if (this.conf.sticker_btn_id)
+                document.getElementById(this.conf.sticker_btn_id).classList.remove(this.conf.css_class_border);
             //mostra nossa
             if (id) document.getElementById(id).classList.add(this.conf.css_class_border);
         }
@@ -432,8 +444,8 @@ class PaintEngine {
             if (this.cur_sticker_cvs) {
                 //desenha ampliado
                 ctx.save();
-                if ((this.conf.sticker_scale_x) && (this.conf.sticker_scale_y)) {
-                    ctx.scale(this.conf.sticker_scale_x, this.conf.sticker_scale_y);
+                if ((this.sticker_scale_x != 1) && (this.sticker_scale_y != 1)) {
+                    ctx.scale(this.sticker_scale_x, this.sticker_scale_y);
                 }
                 ctx.drawImage(this.cur_sticker_cvs, 0, 0);
                 ctx.restore();

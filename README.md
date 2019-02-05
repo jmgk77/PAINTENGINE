@@ -55,8 +55,6 @@ Opcionais:
 - sticker_x: numero x de stickers
 - sticker_y: numero y de stickers
 - current_sticker_canvas: mini-canvas para mostrar sticker selecionado
-- sticker_scale_x: escala X do sticker em relação ao mini-canvas
-- sticker_scale_y: escala Y do sticker em relação ao mini-canvas
 
 
 
@@ -76,9 +74,9 @@ test11.html - testa pintar, apagar e canvas 'cor atual'
 test12.html - testa pintar, apagar e 'css border'
 test13.html - testa pintar, eyedrop, palete, canvas 'cor atual' e 'css border'
 test14.html - testa sticker
-test15.html - testa sticker, canvas 'sticker atual' e sticker_scale_x/sticker_scale_y
+test15.html - testa sticker e canvas 'sticker atual'
 test16.html - testa canvas, palete, canvas 'cor atual', navegação, undo e redo, apagar , eyedrop, stickers, canvas 'sticker atual' e 'css border'
-test17.html - igual que acima, palette_canvas/sticker_canvas e current_color_canvas/current_color_canvas compartilhado (usa sticker_scale_)
+test17.html - igual que acima, palette_canvas/sticker_canvas e current_color_canvas/current_color_canvas compartilhado
 
 
 

@@ -139,10 +139,11 @@ class PaintEngine {
 
     //carrega desenho
     load_sketch(mod) {
-        var ctx = document.getElementById(this.user.sketch_canvas).getContext("2d");
+        var canvas = document.getElementById(this.user.sketch_canvas);
+        var ctx = canvas.getContext("2d");
         var imageObj = new Image();
         imageObj.onload = function() {
-            ctx.drawImage(imageObj, 0, 0);
+            ctx.drawImage(imageObj, 0, 0, canvas.width, canvas.height);
         };
         this.cur_sketch += mod;
         this.cur_sketch = ((this.cur_sketch < 0) ? this.max_sketchs : ((this.cur_sketch > this.max_sketchs) ? 0 : this.cur_sketch));
@@ -297,10 +298,11 @@ class PaintEngine {
 
         //carrega paleta na canvas auxiliar
         if ((this.user.palette_canvas) && (this.user.palette_file)) {
-            var ctx = document.getElementById(this.user.palette_canvas).getContext("2d");
+            var canvas = document.getElementById(this.user.palette_canvas);
+            var ctx = canvas.getContext("2d");
             var img = new Image();
             img.onload = function() {
-                ctx.drawImage(img, 0, 0);
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
             };
             img.src = this.user.palette_file;
 
@@ -419,7 +421,7 @@ class PaintEngine {
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             var img = new Image();
             img.onload = function() {
-                ctx.drawImage(img, 0, 0);
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
             };
             img.src = this.user.sticker_file;
 

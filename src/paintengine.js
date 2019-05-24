@@ -143,6 +143,7 @@ class PaintEngine {
         var ctx = canvas.getContext("2d");
         var imageObj = new Image();
         imageObj.onload = function() {
+            ctx.imageSmoothingEnabled = false;
             ctx.drawImage(imageObj, 0, 0, canvas.width, canvas.height);
         };
         this.cur_sketch += mod;
@@ -184,6 +185,7 @@ class PaintEngine {
         var ctx = document.getElementById(this.user.sketch_canvas).getContext("2d");
         var img = new Image();
         img.onload = function() {
+            ctx.imageSmoothingEnabled = false;
             ctx.drawImage(img, 0, 0);
         };
         img.src = this.history_a[this.history_ptr];
@@ -302,6 +304,7 @@ class PaintEngine {
             var ctx = canvas.getContext("2d");
             var img = new Image();
             img.onload = function() {
+                ctx.imageSmoothingEnabled = false;
                 ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
             };
             img.src = this.user.palette_file;
@@ -421,6 +424,7 @@ class PaintEngine {
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             var img = new Image();
             img.onload = function() {
+                ctx.imageSmoothingEnabled = false;
                 ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
             };
             img.src = this.user.sticker_file;
@@ -454,6 +458,7 @@ class PaintEngine {
                 //salva desenho atual no history
                 this._save_history();
                 //printa sticker 
+                ctx.imageSmoothingEnabled = false;
                 ctx.drawImage(this.temp_sticker_canvas, e.offsetX - (this.sticker_size_x / 2), e.offsetY - (this.sticker_size_y / 2));
             }
         }
@@ -472,6 +477,7 @@ class PaintEngine {
                 if ((this.sticker_scale_x != 1) && (this.sticker_scale_y != 1)) {
                     ctx.scale(this.sticker_scale_x, this.sticker_scale_y);
                 }
+                ctx.imageSmoothingEnabled = false;
                 ctx.drawImage(this.temp_sticker_canvas, 0, 0);
                 ctx.restore();
             }

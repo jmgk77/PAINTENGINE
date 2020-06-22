@@ -6,9 +6,9 @@ PAINT ENGINE - A JS engine for painting games
 
 ***CONSTRUCTOR***
 
-    new PaintEngine( { arg_obj } ) 
+    new PaintEngine( { arg_obj } )
 
-Create a new PaintEngine object. 
+Create a new PaintEngine object.
 
 
 
@@ -97,7 +97,7 @@ Misc:
 
 ***GAMES***
 
-* [Barulandia](https://play.google.com/store/apps/details?id=barulandia.br.com.jmgk)- Paint the drawing of the book [Barulandia](http://barulandia.net/)
+* [Barulandia](https://play.google.com/store/apps/details?id=barulandia.br.com.jmgk) - Paint the drawing of the book [Barulandia](http://barulandia.net/)
 
 
 
@@ -107,7 +107,7 @@ Misc:
 
 
 
-***TESTES***
+***EXAMPLES***
 
 * [test01](http://paintengine.jmgk.com.br/t/test01.html) - test canvas alone
 * [test02](http://paintengine.jmgk.com.br/t/test02.html) - test canvas, construtor defined color

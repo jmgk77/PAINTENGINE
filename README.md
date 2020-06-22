@@ -97,8 +97,8 @@ Misc:
 
 ***DEMOS***
 
-[Barulandia](https://play.google.com/store/apps/details?id=barulandia.br.com.jmgk)- Paint the drawing of the book [Barulandia](http://barulandia.net/)
-[Unhas](https://github.com/jmgk77/UNHAS-APK) - a simple nail painting game
+* [Barulandia](https://play.google.com/store/apps/details?id=barulandia.br.com.jmgk)- Paint the drawing of the book [Barulandia](http://barulandia.net/)
+* [Unhas](https://github.com/jmgk77/UNHAS-APK) - a simple nail painting game
 
 
 

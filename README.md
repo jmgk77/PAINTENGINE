@@ -63,28 +63,22 @@ Opcionais:
 
 ***TESTES***
 
-test01.html - testa canvas sozinha
-test02.html - testa canvas, definindo a cor no construtor
-test03.html - testa canvas, definindo a cor no setter
-test04.html - testa palete
-test05.html - testa canvas 'cor atual'
-test06.html - testa canvas, palete e canvas 'cor atual'
-test07.html - testa navegação
-test08.html - testa canvas, palete, canvas 'cor atual' e navegação
-test09.html - testa undo e redo
-test10.html - testa pintar e apagar
-test11.html - testa pintar, apagar e canvas 'cor atual'
-test12.html - testa pintar, apagar e 'css border'
-test13.html - testa pintar, eyedrop, palete, canvas 'cor atual' e 'css border'
-test14.html - testa sticker
-test15.html - testa sticker e canvas 'sticker atual'
-test16.html - testa canvas, palete, canvas 'cor atual', navegação, undo e redo, apagar, eyedrop, stickers, canvas 'sticker atual' e 'css border'
-test17.html - igual que acima, palette_canvas/sticker_canvas e current_color_canvas/current_color_canvas compartilhado
-test18.html - igual que acima, color_blacklist
-test19.html - testa sticker, color_transparency
-
-
-
-_Proprietary and confidential._
-
-**Unauthorized copying of any files in this project, via any medium is strictly prohibited.**
+* http://paintengine.jmgk.com.br/t/test01.html - testa canvas sozinha
+* http://paintengine.jmgk.com.br/t/test02.html - testa canvas, definindo a cor no construtor
+* http://paintengine.jmgk.com.br/t/test03.html - testa canvas, definindo a cor no setter
+* http://paintengine.jmgk.com.br/t/test04.html - testa palete
+* http://paintengine.jmgk.com.br/t/test05.html - testa canvas 'cor atual'
+* http://paintengine.jmgk.com.br/t/test06.html - testa canvas, palete e canvas 'cor atual'
+* http://paintengine.jmgk.com.br/t/test07.html - testa navegação
+* http://paintengine.jmgk.com.br/t/test08.html - testa canvas, palete, canvas 'cor atual' e navegação
+* http://paintengine.jmgk.com.br/t/test09.html - testa undo e redo
+* http://paintengine.jmgk.com.br/t/test10.html - testa pintar e apagar
+* http://paintengine.jmgk.com.br/t/test11.html - testa pintar, apagar e canvas 'cor atual'
+* http://paintengine.jmgk.com.br/t/test12.html - testa pintar, apagar e 'css border'
+* http://paintengine.jmgk.com.br/t/test13.html - testa pintar, eyedrop, palete, canvas 'cor atual' e 'css border'
+* http://paintengine.jmgk.com.br/t/test14.html - testa sticker
+* http://paintengine.jmgk.com.br/t/test15.html - testa sticker e canvas 'sticker atual'
+* http://paintengine.jmgk.com.br/t/test16.html - testa canvas, palete, canvas 'cor atual', navegação, undo e redo, apagar, eyedrop, stickers, * canvas 'sticker atual' e 'css border'
+* http://paintengine.jmgk.com.br/t/test17.html - igual que acima, palette_canvas/sticker_canvas e current_color_canvas/current_color_canvas * compartilhado
+* http://paintengine.jmgk.com.br/t/test18.html - igual que acima, color_blacklist
+* http://paintengine.jmgk.com.br/t/test19.html - testa sticker, color_transparency

@@ -1,5 +1,5 @@
-//PAINT_ENGINE - Engine para jogos de pintar
-//(c) JMGK 2019
+//PAINT_ENGINE - A JS engine for painting games
+//JMGK 2019
 
 'use strict';
 
@@ -328,6 +328,7 @@ class PaintEngine {
         var ctx = canvas.getContext("2d");
 
         //https://ben.akrin.com/?p=7888 (method #4)
+        //http://www.williammalone.com/articles/html5-canvas-javascript-paint-bucket-tool/
         var pixel_stack = [{ x: e.offsetX, y: e.offsetY }];
         var pixels = ctx.getImageData(0, 0, canvas.width, canvas.height);
         var coords = (e.offsetY * canvas.width + e.offsetX) * 4;

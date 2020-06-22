@@ -1,8 +1,6 @@
 # PAINT ENGINE
 
-**Copyright (c) JMGK All Rights reserved**
-
-PAINT ENGINE - Engine para jogos de pintar
+PAINT ENGINE - A JS engine for painting games
 
 
 
@@ -10,11 +8,15 @@ PAINT ENGINE - Engine para jogos de pintar
 
     new PaintEngine( { arg_obj } ) 
 
+Create a new PaintEngine object. 
+
 
 
 ***COLOR (SETTER)***
 
     PaintEngine.color = {r:,g:,b:a:}
+
+Set the current painting color.
 
 
 
@@ -22,49 +24,81 @@ PAINT ENGINE - Engine para jogos de pintar
 
     PaintEngine.run()
 
+Run the engine.
+
 
 
 ***{ arg_obj }***
 
-Requeridos:
-- sketch_canvas: main canvas id
-- sketch_files: array of sketchs filenames
+Required:
 
-Opcionais:
-- color: default color object ({r:,g:,b:,a:})
-- palette_file: arquivo com a paleta a ser utilizada (tem que ter o tamanho de palette_canvas)
-- palette_canvas: canvas auxiliar para mostrar a paletter
-- current_color_canvas: mini-canvas para mostrar a cor selecionada
+    sketch_canvas: main canvas id
+    sketch_files: array of sketchs filenames (can be one)
 
-- css_class_border: nome da classe css para bordas de botões
+Options:
 
-- prev_btn_id: id do botão para navegar ao desenho anterior de sketch_files[]
-- reload_btn_id: id do botão para recarregar o desenho atual de sketch_files[]
-- next_btn_id: id do botão para navegar ao proximo desenho de sketch_files[]
+    color: default color object ({r:, g:, b:, a:})
 
-- undo_btn_id: id of botão undo
-- redo_btn_id: id of botão redo
+Palette related:
 
-- paint_btn_id: id of botão pintar
-- erase_btn_id: id of botão apagar
-- eyedrop_btn_id: id do botão eyedrop
+    palette_file: file with the palette to be used (must be the size of palette_canvas)
 
-- sticker_btn_id: id do botão sticker
-- sticker_file: arquivo com a spritesheet dos stickers (tem que ter o tamanho de sticker_canvas)
-- sticker_canvas: canvas auxiliar para mostrar os stickers
-- sticker_x: numero x de stickers
-- sticker_y: numero y de stickers
-- current_sticker_canvas: mini-canvas para mostrar sticker selecionado
+    palette_canvas: auxiliary canvas to show the paletter
 
-- color_blacklist: array de color object [{r:,g:,b:,a:}] onde as ferramentas não funcionam
-- color_transparency: array de color object [{r:,g:,b:,a:}] transparentes nos stickers
+    current_color_canvas: mini-canvas to show the selected color
+
+Navigate sketchs:
+
+    prev_btn_id: button id to navigate to the previous sketch_files drawing []
+
+    reload_btn_id: button id to reload the current sketch_files drawing []
+
+    next_btn_id: button id to navigate to the next sketch_files drawing []
+
+Undo/redo:
+
+    undo_btn_id: id of undo button
+
+    redo_btn_id: id of redo button
+
+Painting tools:
+
+    paint_btn_id: id of paint button
+
+    erase_btn_id: id of erase button
+
+    eyedrop_btn_id: eyedrop button id
+
+Stickers related:
+
+    sticker_btn_id: sticker button id
+
+    sticker_file: file with the stickers spritesheet (must be the size of sticker_canvas)
+
+    sticker_canvas: auxiliary canvas to show the stickers
+
+    sticker_x: x number of stickers
+
+    sticker_y: y number of stickers
+
+    current_sticker_canvas: mini-canvas to show selected sticker
+
+Color related:
+
+    color_blacklist: array of color object [{r:, g:, b:, a:}] where the tools don't work
+
+    color_transparency: array of color object [{r:, g:, b:, a:}] transparent in stickers
+
+Misc:
+
+    css_class_border: css class name for button borders
 
 
 
 ***DEMOS***
 
-https://play.google.com/store/apps/details?id=barulandia.br.com.jmgk - Paint the drawing of the book [Barulandia](http://barulandia.net/)
-https://github.com/jmgk77/UNHAS-APK - a simple nail painting game
+[Barulandia](https://play.google.com/store/apps/details?id=barulandia.br.com.jmgk)- Paint the drawing of the book [Barulandia](http://barulandia.net/)
+[Unhas](https://github.com/jmgk77/UNHAS-APK) - a simple nail painting game
 
 
 

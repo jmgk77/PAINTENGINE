@@ -7,7 +7,7 @@
 sketch_canvas, sketch_files, color, palette_canvas, palette_file, current_color_canvas,
 prev_btn_id, reload_btn_id, next_btn_id,undo_btn_id, redo_btn_id, paint_btn_id, erase_btn_id,
 css_class_border, eyedrop_btn_id, sticker_btn_id, sticker_file, sticker_x, sticker_y, 
-current_sticker_canvas, color_blacklist, color_transparency
+current_sticker_canvas, color_blocklist, color_transparency
 */
 
 class PaintEngine {
@@ -36,9 +36,9 @@ class PaintEngine {
 
         //se user não definiu as cores proibidas, permitidas, e de transparencia, usa defaults
         //cores sob as quais as ferramentas NÃO FUNCIONAM
-        if (!this.user.color_blacklist) {
+        if (!this.user.color_blocklist) {
             //'preto absoluto' é reservado para linhas
-            this.user.color_blacklist = [{ r: 0x00, g: 0x00, b: 0x00, a: 0xff }];
+            this.user.color_blocklist = [{ r: 0x00, g: 0x00, b: 0x00, a: 0xff }];
         }
         //cores sob as quais é aplicada transparencia
         if (!this.user.color_transparency) {
@@ -268,7 +268,7 @@ class PaintEngine {
             b: imgData.data[2],
             a: imgData.data[3]
         }
-        if (!this._check_color_in_list(c, this.user.color_blacklist)) {
+        if (!this._check_color_in_list(c, this.user.color_blocklist)) {
             //escolhe essa cor
             this.paint_color = this.user.color = c;
             //se escolheu cor é pq quer pintar (???)
@@ -276,7 +276,7 @@ class PaintEngine {
         }
     }
 
-    //checa se a cor não está em color_blacklist 
+    //checa se a cor não está em color_blocklist 
     _check_color_in_list(c, list) {
         //console.log(c.r + ',' + c.g + ',' + c.b + ',' + c.a);
         for (var i = 0; i < list.length; i++) {
@@ -340,7 +340,7 @@ class PaintEngine {
         };
 
         //adiciona a cor atual na lista proibida (para evitar pintar o que ja tem a mesma cor - hang)
-        var l = [...this.user.color_blacklist, this.user.color];
+        var l = [...this.user.color_blocklist, this.user.color];
         //e sai se tenta pintar cor reservada 
         if (this._check_color_in_list(o_colour, l)) return;
 
@@ -455,7 +455,7 @@ class PaintEngine {
                 a: p.data[((e.offsetY * canvas.width + e.offsetX) * 4) + 3]
             };
             //e somente bota sticker se a cor não é reservada 
-            if (!this._check_color_in_list(c, this.user.color_blacklist)) {
+            if (!this._check_color_in_list(c, this.user.color_blocklist)) {
                 //salva desenho atual no history
                 this._save_history();
                 //printa sticker 

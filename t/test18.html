@@ -29,7 +29,7 @@
             redo_btn_id: 'btn_redo',
             erase_btn_id: 'btn_erase',
             sticker_btn_id: 'btn_sticker',
-            color_blacklist: [{ r: 0x00, g: 0x00, b: 0x00, a: 0xff }, { r: 219, g: 56, b: 56, a: 0xff }]
+            color_blocklist: [{ r: 0x00, g: 0x00, b: 0x00, a: 0xff }, { r: 219, g: 56, b: 56, a: 0xff }]
         });
         paint_engine.run();
     }
@@ -38,7 +38,7 @@
 
 <body>
     <div style="border:1px solid black;">
-        new PaintEngine( { sketch_canvas: , sketch_files: , paint_btn_id: , eyedrop_btn_id: , css_class_border: , palette_canvas: , palette_file: , current_color_canvas: , sticker_file: , sticker_x: , sticker_y: , sticker_canvas: , current_sticker_canvas: , undo_btn_id: , redo_btn_id: ', prev_btn_id: , reload_btn_id: , next_btn_id: , erase_btn_id: , sticker_btn_id: , color_blacklist: )
+        new PaintEngine( { sketch_canvas: , sketch_files: , paint_btn_id: , eyedrop_btn_id: , css_class_border: , palette_canvas: , palette_file: , current_color_canvas: , sticker_file: , sticker_x: , sticker_y: , sticker_canvas: , current_sticker_canvas: , undo_btn_id: , redo_btn_id: ', prev_btn_id: , reload_btn_id: , next_btn_id: , erase_btn_id: , sticker_btn_id: , color_blocklist: )
     </div>
     <br><canvas id="canvas1" width="800" height="600"></canvas>
     <br>

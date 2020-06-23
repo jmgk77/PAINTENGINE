@@ -85,63 +85,43 @@ class PaintEngine {
     //roda a bagaça
     run() {
         //handler para usar a ferramenta atual no desenho
-        document.getElementById(this.user.sketch_canvas).onclick = (e) => {
-            this.tool(e)
-        }.bind(this);
+        document.getElementById(this.user.sketch_canvas).onclick = ((e) => this.tool(e)).bind(this);
 
         //handler para ir para esenho anterior
         if (this.user.prev_btn_id) {
-            document.getElementById(this.user.prev_btn_id).onclick = () => {
-                this.load_sketch(-1)
-            }.bind(this);
+            document.getElementById(this.user.prev_btn_id).onclick = (() => this.load_sketch(-1)).bind(this);
         }
         //handler para ir para proximo desenho
         if (this.user.next_btn_id) {
-            document.getElementById(this.user.next_btn_id).onclick = () => {
-                this.load_sketch(1)
-            }.bind(this);
+            document.getElementById(this.user.next_btn_id).onclick = (() => this.load_sketch(1)).bind(this);
         }
         //handler para limpar desenho
         if (this.user.reload_btn_id) {
-            document.getElementById(this.user.reload_btn_id).onclick = () => {
-                this.load_sketch(0)
-            }.bind(this);
+            document.getElementById(this.user.reload_btn_id).onclick = (() => this.load_sketch(0)).bind(this);
         }
         //handler para voltar o ultimo comando
         if (this.user.undo_btn_id) {
-            document.getElementById(this.user.undo_btn_id).onclick = () => {
-                this.back_history()
-            }.bind(this);
+            document.getElementById(this.user.undo_btn_id).onclick = (() => this.back_history()).bind(this);
         }
         //handler para refazer o ultimo comando
         if (this.user.redo_btn_id) {
-            document.getElementById(this.user.redo_btn_id).onclick = () => {
-                this.redo_history()
-            }.bind(this);
+            document.getElementById(this.user.redo_btn_id).onclick = (() => this.redo_history()).bind(this);
         }
         //handler para ferramenta 'pintar' (preencher)
         if (this.user.paint_btn_id) {
-            document.getElementById(this.user.paint_btn_id).onclick = () => {
-                this.paint()
-            }.bind(this);
+            document.getElementById(this.user.paint_btn_id).onclick = (() => this.paint()).bind(this);
         }
         //handler para ferramenta 'apagar' (pintar com branco)
         if (this.user.erase_btn_id) {
-            document.getElementById(this.user.erase_btn_id).onclick = () => {
-                this.erase()
-            }.bind(this);
+            document.getElementById(this.user.erase_btn_id).onclick = (() => this.erase()).bind(this);
         }
         //handler para ferramenta 'eyedrop' (pegar cor)
         if (this.user.eyedrop_btn_id) {
-            document.getElementById(this.user.eyedrop_btn_id).onclick = () => {
-                this.eyedrop()
-            }.bind(this);
+            document.getElementById(this.user.eyedrop_btn_id).onclick = (() => this.eyedrop()).bind(this);
         }
         //handler para ferramenta 'sticker' (adiciona figurinhas duma spritesheet)
         if (this.user.sticker_btn_id) {
-            document.getElementById(this.user.sticker_btn_id).onclick = () => {
-                this.sticker()
-            }.bind(this);
+            document.getElementById(this.user.sticker_btn_id).onclick = (() => this.sticker()).bind(this);
         }
 
         //carrega desenho
